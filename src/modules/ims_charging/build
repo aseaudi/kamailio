@@ -1,0 +1,2 @@
+make ; cp ims_charging.so /usr/local/lib64/kamailio/modules/ims_charging.so
+

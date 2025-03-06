@@ -75,10 +75,8 @@ AAAReturnCode AAABuildMsgBuffer(AAAMessage *msg)
 	msg->buf.len = AAA_MSG_HDR_SIZE; /* AAA message header size */
 	/* count and add the avps */
 	for(avp = msg->avpList.head; avp; avp = avp->next) {
-		// if (avp->code == 480 || avp->code == 485) continue;
-		if (avp->code == 480) continue;
 		msg->buf.len += AVP_HDR_SIZE(avp->flags) + to_32x_len(avp->data.len);
-		LM_DBG("AVP code: %d, data %.*s\n", avp->code, avp->data.len, avp->data.s);
+		//LM_DBG("AVP code: %d, data %.*s\n", avp->code, avp->data.len, avp->data.s);
 	}
 
 	LM_DBG("AAABuildMsgBuffer(): len=%d\n", msg->buf.len);
@@ -115,11 +113,8 @@ AAAReturnCode AAABuildMsgBuffer(AAAMessage *msg)
 
 	/* AVPS */
 	for(avp = msg->avpList.head; avp; avp = avp->next) {
-		LM_DBG("AAABuildMsgBuffer(): AVP code =%d\n", avp->code);
 		/* AVP HEADER */
 		/* avp code */
-		// if (avp->code == 480 || avp->code == 485) continue;
-		if (avp->code == 480) continue;
 		set_4bytes(p, avp->code);
 		p += 4;
 		/* flags */
@@ -136,6 +131,7 @@ AAAReturnCode AAABuildMsgBuffer(AAAMessage *msg)
 		memcpy(p, avp->data.s, avp->data.len);
 		p += to_32x_len(avp->data.len);
 	}
+
 	if((char *)p - msg->buf.s != msg->buf.len) {
 		LM_ERR("BUG: build_buf_from_msg: mismatch between len and buf!\n");
 		shm_free(msg->buf.s);
@@ -143,6 +139,7 @@ AAAReturnCode AAABuildMsgBuffer(AAAMessage *msg)
 		msg->buf.len = 0;
 		goto error;
 	}
+
 	return 1;
 error:
 	return -1;

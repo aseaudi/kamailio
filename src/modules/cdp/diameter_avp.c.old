@@ -572,7 +572,6 @@ error:
  */
 void AAAAddAVPToList(AAA_AVP_LIST *list, AAA_AVP *avp)
 {
-	LM_DBG("AAAAddAVPToList(): ****AVP code =%d******\n", avp->code);
 	if(list->tail) {
 		avp->prev = list->tail;
 		avp->next = 0;

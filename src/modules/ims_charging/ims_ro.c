@@ -202,6 +202,8 @@ int Ro_add_avp_list(AAA_AVP_LIST *list, char *d, int len, int avp_code,
 		LM_ERR("%s: Failed creating avp\n", func);
 		return 0;
 	}
+		LM_DBG("XXXXX avp.data %.*s\n", avp->data.len, avp->data.s);
+
 	if(list->tail) {
 		avp->prev = list->tail;
 		avp->next = 0;
@@ -488,6 +490,13 @@ int Ro_add_vendor_specific_appid(AAAMessage *msg, unsigned int vendor_id,
 	}
 
 	group = cdpb.AAAGroupAVPS(list);
+
+	AAA_AVP *tt;
+        for(tt = list.head; tt; tt = tt->next) { 
+		LM_DBG("XXXXX %s\n", tt->data.s);
+	}
+
+	LM_DBG("XXXXX %s\n", group.s);
 
 	cdpb.AAAFreeAVPList(&list);
 
@@ -1448,11 +1457,21 @@ int Ro_Send_CCR(struct sip_msg *msg, struct dlg_cell *dlg, int dir,
 
 	if(!(ccr = Ro_new_ccr(cc_acc_session, ro_ccr_data)))
 		goto error;
-
+/*
+	AAA_AVP *avp;
+	for(avp = ccr->avpList.head; avp; avp = avp->next) {               
+                LM_DBG("AVP code: %d, data %.*s\n", avp->code, avp->data.len, avp->data.s);
+        }
+*/
 	if(!Ro_add_vendor_specific_appid(ccr, IMS_vendor_id_3GPP, IMS_Ro, 0)) {
 		LM_ERR("Problem adding Vendor specific ID\n");
 		goto error;
 	}
+
+        AAA_AVP *avp;
+        for(avp = ccr->avpList.head; avp; avp = avp->next) {
+                LM_DBG("XXXXX AVP code: %d, data %.*s\n", avp->code, avp->data.len, avp->data.s);
+        }
 
 	if(!Ro_add_cc_request(ccr, cc_event_type, cc_event_number)) {
 		LM_ERR("Problem adding CC-Request data\n");
@@ -1500,6 +1519,7 @@ int Ro_Send_CCR(struct sip_msg *msg, struct dlg_cell *dlg, int dir,
 	LM_DBG("Sending CCR Diameter message.\n");
 	//    new_session->ccr_sent = 1;      //assume we will send successfully
 	cdpb.AAASessionsUnlock(cc_acc_session->hash);
+
 
 	if(ro_forced_peer.len > 0) {
 		LM_DBG("Sending message with Peer\n");
