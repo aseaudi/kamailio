@@ -256,6 +256,12 @@ AAAMessage *Ro_write_CCR_avps(AAAMessage *ccr, Ro_CCR_t *x)
 		return 0;
 	LM_DBG("write all CCR AVPs\n");
 
+	AAA_AVP *avp;
+	for(avp = ccr->avpList.head; avp; avp = avp->next) {
+		LM_DBG("###Ro_write_CCR_avps(): AVP code =%d\n", avp->code);
+	
+	}
+
 	if(x->origin_host.s && x->origin_host.len > 0) {
 		if(!cdp_avp->base.add_Origin_Host(&(ccr->avpList), x->origin_host, 0))
 			goto error;
@@ -276,14 +282,14 @@ AAAMessage *Ro_write_CCR_avps(AAAMessage *ccr, Ro_CCR_t *x)
 		if(!ro_add_destination_realm_avp(ccr, x->destination_realm))
 			goto error;
 	}
-
+/*
 	if(!cdp_avp->base.add_Accounting_Record_Type(
 			   &(ccr->avpList), x->acct_record_type))
 		goto error;
 	if(!cdp_avp->base.add_Accounting_Record_Number(
 			   &(ccr->avpList), x->acct_record_number))
 		goto error;
-
+*/
 	if(x->user_name)
 		if(!cdp_avp->base.add_User_Name(
 				   &(ccr->avpList), *(x->user_name), AVP_DUPLICATE_DATA))

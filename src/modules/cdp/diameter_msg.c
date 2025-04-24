@@ -75,6 +75,7 @@ AAAReturnCode AAABuildMsgBuffer(AAAMessage *msg)
 	msg->buf.len = AAA_MSG_HDR_SIZE; /* AAA message header size */
 	/* count and add the avps */
 	for(avp = msg->avpList.head; avp; avp = avp->next) {
+		if (avp->code == 480) continue;
 		msg->buf.len += AVP_HDR_SIZE(avp->flags) + to_32x_len(avp->data.len);
 		//LM_DBG("AVP code: %d, data %.*s\n", avp->code, avp->data.len, avp->data.s);
 	}

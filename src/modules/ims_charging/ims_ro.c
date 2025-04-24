@@ -198,6 +198,7 @@ int Ro_add_avp_list(AAA_AVP_LIST *list, char *d, int len, int avp_code,
 	if(vendorid != 0)
 		flags |= AAA_AVP_FLAG_VENDOR_SPECIFIC;
 	avp = cdpb.AAACreateAVP(avp_code, flags, vendorid, d, len, data_do);
+	LM_DBG("XXXXX avp.data %s\n", avp->data.s);
 	if(!avp) {
 		LM_ERR("%s: Failed creating avp\n", func);
 		return 0;
@@ -488,6 +489,13 @@ int Ro_add_vendor_specific_appid(AAAMessage *msg, unsigned int vendor_id,
 	}
 
 	group = cdpb.AAAGroupAVPS(list);
+
+	AAA_AVP *tt;
+    for(tt = list.head; tt; tt = tt->next) { 
+		LM_DBG("XXXXX %s\n", tt->data.s);
+	}
+
+	LM_DBG("XXXXX %s\n", group.s);
 
 	cdpb.AAAFreeAVPList(&list);
 
