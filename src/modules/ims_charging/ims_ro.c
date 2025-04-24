@@ -160,7 +160,8 @@ static void format_subscription_id(
 		}
 	} else {
 		*subscription_id_type =
-				Subscription_Type_IMPU; //default is END_USER_SIP_URI
+				// Subscription_Type_IMPU; //default is END_USER_SIP_URI
+				Subscription_Type_IMSI;
 	}
 }
 
@@ -202,7 +203,7 @@ int Ro_add_avp_list(AAA_AVP_LIST *list, char *d, int len, int avp_code,
 		LM_ERR("%s: Failed creating avp\n", func);
 		return 0;
 	}
-		LM_DBG("XXXXX avp.data %.*s\n", avp->data.len, avp->data.s);
+	LM_DBG("XXXXX avp.data %d %.*s\n", avp_code, avp->data.len, avp->data.s);
 
 	if(list->tail) {
 		avp->prev = list->tail;
@@ -469,16 +470,26 @@ int Ro_add_vendor_specific_appid(AAAMessage *msg, unsigned int vendor_id,
 
 	list.head = 0;
 	list.tail = 0;
+	LM_DBG("XXXX vendor_id %d\n", vendor_id);
 
 	LM_DBG("add Vendor-Specific-Application-Id %d\n", vendor_id);
 
-	set_4bytes(x, vendor_id);
+	set_4bytes(x, vendor_id);  
+	LM_DBG("XXXX x[0] %x\n", x[0]);
+	LM_DBG("XXXX x[1] %x\n", x[1]);
+	LM_DBG("XXXX x[2] %x\n", x[2]);
+	LM_DBG("XXXX x[3] %x\n", x[3]);
 	Ro_add_avp_list(&list, x, 4, AVP_Vendor_Id, AAA_AVP_FLAG_MANDATORY, 0,
 			AVP_DUPLICATE_DATA, __FUNCTION__);
 
+	LM_DBG("XXXX auth_id %d\n", auth_id);
 	if(auth_id) {
 		LM_DBG("adding Auth-Application-Id %d\n", auth_id);
 		set_4bytes(x, auth_id);
+			LM_DBG("XXXX x[0] %x\n", x[0]);
+	LM_DBG("XXXX x[1] %x\n", x[1]);
+	LM_DBG("XXXX x[2] %x\n", x[2]);
+	LM_DBG("XXXX x[3] %x\n", x[3]);
 		Ro_add_avp_list(&list, x, 4, AVP_Auth_Application_Id,
 				AAA_AVP_FLAG_MANDATORY, 0, AVP_DUPLICATE_DATA, __FUNCTION__);
 	}
@@ -493,10 +504,11 @@ int Ro_add_vendor_specific_appid(AAAMessage *msg, unsigned int vendor_id,
 
 	AAA_AVP *tt;
         for(tt = list.head; tt; tt = tt->next) { 
-		LM_DBG("XXXXX %s\n", tt->data.s);
+		// LM_DBG("XXXXX list %*.s\n", tt->data.len, tt->data.s);
+		LM_DBG("XXXXX list %d\n", tt->code);
 	}
 
-	LM_DBG("XXXXX %s\n", group.s);
+	LM_DBG("XXXXX %*.s\n", group.len, group.s);
 
 	cdpb.AAAFreeAVPList(&list);
 
@@ -1282,7 +1294,8 @@ int Ro_Send_CCR(struct sip_msg *msg, struct dlg_cell *dlg, int dir,
 	str session_id = {0, 0}, called_asserted_identity = {0, 0},
 		subscription_id = {0, 0}, asserted_identity = {0, 0},
 		app_provided_party = {0, 0};
-	int subscription_id_type = AVP_EPC_Subscription_Id_Type_End_User_SIP_URI;
+	// int subscription_id_type = AVP_EPC_Subscription_Id_Type_End_User_SIP_URI;
+	int subscription_id_type = AVP_EPC_Subscription_Id_Type_End_User_IMSI;
 	AAASession *cc_acc_session = NULL;
 	Ro_CCR_t *ro_ccr_data = 0;
 	AAAMessage *ccr = 0;
@@ -1463,15 +1476,11 @@ int Ro_Send_CCR(struct sip_msg *msg, struct dlg_cell *dlg, int dir,
                 LM_DBG("AVP code: %d, data %.*s\n", avp->code, avp->data.len, avp->data.s);
         }
 */
+
 	if(!Ro_add_vendor_specific_appid(ccr, IMS_vendor_id_3GPP, IMS_Ro, 0)) {
 		LM_ERR("Problem adding Vendor specific ID\n");
 		goto error;
 	}
-
-        AAA_AVP *avp;
-        for(avp = ccr->avpList.head; avp; avp = avp->next) {
-                LM_DBG("XXXXX AVP code: %d, data %.*s\n", avp->code, avp->data.len, avp->data.s);
-        }
 
 	if(!Ro_add_cc_request(ccr, cc_event_type, cc_event_number)) {
 		LM_ERR("Problem adding CC-Request data\n");

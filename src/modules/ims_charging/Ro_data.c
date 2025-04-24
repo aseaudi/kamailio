@@ -193,7 +193,7 @@ Ro_CCR_t *new_Ro_CCR(int32_t acc_record_type, str *user_name,
 	if(cfg.destination_realm.s && cfg.destination_realm.len > 0)
 		str_dup(x->destination_realm, cfg.destination_realm, pkg);
 
-	x->acct_record_type = acc_record_type;
+	// x->acct_record_type = acc_record_type;
 
 	if(user_name) {
 		str_dup_ptr_ptr(x->user_name, user_name, pkg);

@@ -76,7 +76,7 @@ AAAReturnCode AAABuildMsgBuffer(AAAMessage *msg)
 	/* count and add the avps */
 	for(avp = msg->avpList.head; avp; avp = avp->next) {
 		// if (avp->code == 480 || avp->code == 485) continue;
-		if (avp->code == 480) continue;
+		if (msg->commandCode == Diameter_CCR && avp->code == 260) continue;
 		msg->buf.len += AVP_HDR_SIZE(avp->flags) + to_32x_len(avp->data.len);
 		LM_DBG("AVP code: %d, data %.*s\n", avp->code, avp->data.len, avp->data.s);
 	}
@@ -119,7 +119,7 @@ AAAReturnCode AAABuildMsgBuffer(AAAMessage *msg)
 		/* AVP HEADER */
 		/* avp code */
 		// if (avp->code == 480 || avp->code == 485) continue;
-		if (avp->code == 480) continue;
+		if (msg->commandCode == Diameter_CCR && avp->code == 260) continue;
 		set_4bytes(p, avp->code);
 		p += 4;
 		/* flags */

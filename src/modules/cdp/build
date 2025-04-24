@@ -1,0 +1,1 @@
+make; cp cdp.so /usr/local/lib64/kamailio/modules/cdp.so
