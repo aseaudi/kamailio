@@ -160,7 +160,8 @@ static void format_subscription_id(
 		}
 	} else {
 		*subscription_id_type =
-				Subscription_Type_IMPU; //default is END_USER_SIP_URI
+				// Subscription_Type_IMPU; //default is END_USER_SIP_URI
+				Subscription_Type_IMSI;
 	}
 }
 
@@ -1273,7 +1274,8 @@ int Ro_Send_CCR(struct sip_msg *msg, struct dlg_cell *dlg, int dir,
 	str session_id = {0, 0}, called_asserted_identity = {0, 0},
 		subscription_id = {0, 0}, asserted_identity = {0, 0},
 		app_provided_party = {0, 0};
-	int subscription_id_type = AVP_EPC_Subscription_Id_Type_End_User_SIP_URI;
+	// int subscription_id_type = AVP_EPC_Subscription_Id_Type_End_User_SIP_URI;
+	int subscription_id_type = AVP_EPC_Subscription_Id_Type_End_User_IMSI;
 	AAASession *cc_acc_session = NULL;
 	Ro_CCR_t *ro_ccr_data = 0;
 	AAAMessage *ccr = 0;

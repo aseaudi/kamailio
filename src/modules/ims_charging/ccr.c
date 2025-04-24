@@ -277,12 +277,16 @@ AAAMessage *Ro_write_CCR_avps(AAAMessage *ccr, Ro_CCR_t *x)
 			goto error;
 	}
 
+	cdp_avp->base.add_Auth_Application_Id(&(ccr->avpList), 4);
+
+	/*
 	if(!cdp_avp->base.add_Accounting_Record_Type(
 			   &(ccr->avpList), x->acct_record_type))
 		goto error;
 	if(!cdp_avp->base.add_Accounting_Record_Number(
 			   &(ccr->avpList), x->acct_record_number))
 		goto error;
+	*/
 
 	if(x->user_name)
 		if(!cdp_avp->base.add_User_Name(
