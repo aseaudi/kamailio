@@ -160,8 +160,8 @@ static void format_subscription_id(
 		}
 	} else {
 		*subscription_id_type =
-				// Subscription_Type_IMPU; //default is END_USER_SIP_URI
-				Subscription_Type_IMSI;
+				Subscription_Type_IMPU; //default is END_USER_SIP_URI 
+				// Subscription_Type_IMSI; this was to overcome unknown user error				
 	}
 }
 
