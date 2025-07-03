@@ -817,12 +817,12 @@ void send_ccr_interim(
 	}
 
 	//don't send INTERIM record if session is not in OPEN state (it could already be waiting for a previous response, etc)
-	if(auth->u.cc_acc.state != ACC_CC_ST_OPEN) {
-		LM_WARN("ignoring interim update on CC session not in correct state, "
-				"currently in state [%d]\n",
-				auth->u.cc_acc.state);
-		goto error;
-	}
+	// if(auth->u.cc_acc.state != ACC_CC_ST_OPEN) {
+	// 	LM_WARN("ignoring interim update on CC session not in correct state, "
+	// 			"currently in state [%d]\n",
+	// 			auth->u.cc_acc.state);
+	// 	goto error;
+	// }
 
 	if(!(ccr = Ro_new_ccr(auth, ro_ccr_data)))
 		goto error;
