@@ -338,7 +338,7 @@ again:
 	LM_WARN("XXXXXX send_fd after sendmesg (pipe_fd, &msg, 0), ret: %d\n", ret);
 	if(ret < 0) {
 		if(errno == EINTR)
-			LM_WARN("XXXXXX send_fd after sendmesg errno = EITNR"\n);
+			LM_WARN("XXXXXX send_fd after sendmesg errno = EITNR\n");
 			goto again;
 		if((errno != EAGAIN) && (errno != EWOULDBLOCK)) {
 			LM_CRIT("XXXXXX sendmsg failed on %d: %s\n", pipe_fd, strerror(errno));
@@ -392,7 +392,7 @@ static int receive_fd(int pipe_fd, int *fd, peer **p)
 
 again:
 	ret = recvmsg(pipe_fd, &msg, MSG_DONTWAIT | MSG_WAITALL);
-	LM_WARN("XXXXXX receive_fd after recvmsg ret: %d\n", d);
+	LM_WARN("XXXXXX receive_fd after recvmsg ret: %d\n", ret);
 	if(ret < 0) {
 		if(errno == EINTR)
 			LM_WARN("XXXXXX receive_fd after recvmsg errno == EINTR\n");
@@ -941,7 +941,7 @@ int receive_loop(peer *original_peer)
 					}
 				receive:
 					/* receive */
-					LM_WARN("XXXXXX receive_loop receive:"\n);
+					LM_WARN("XXXXXX receive_loop receive:\n");
 					if(sp->tcp_socket >= 0 && FD_ISSET(sp->tcp_socket, &rfds)) {
 						errno = 0;
 
