@@ -129,7 +129,7 @@ static int make_send_pipe(serviced_peer_t *sp)
 {
 	LM_WARN("XXXXXX make_send_pipe\n");
 	local_id++;
-	LM_WARN("XXXXXX make_send_pipe local_id: %d\n", local_id;
+	LM_WARN("XXXXXX make_send_pipe local_id: %d\n", local_id);
 	sp->send_pipe_name.s = shm_malloc(sizeof(PIPE_PREFIX) + 64);
 	sprintf(sp->send_pipe_name.s, "%s%d_%d_%u", PIPE_PREFIX, getpid(), local_id,
 			(unsigned int)(unsigned long long)time(0));
