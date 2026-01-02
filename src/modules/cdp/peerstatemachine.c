@@ -102,10 +102,10 @@ int sm_process(
 					p->state = Wait_Conn_Ack;
 					next_event = I_Snd_Conn_Req(p);
 					LM_WARN("XXXXXX sm_process after I_Snd_Conn_Req\n");
-					if(next_event == I_Rcv_Conn_NAck)
+					if(next_event == I_Rcv_Conn_NAck) {
 						LM_WARN("XXXXXX sm_process after I_Snd_Conn_Req next_event == I_Rcv_Conn_NAck\n");
 						sm_process(p, next_event, 0, 1, p->I_sock);
-					else {
+					} else {
 						LM_WARN("XXXXXX sm_process after I_Snd_Conn_Req next_event == I_Rcv_Conn_Ack, wait for send pipe to be opened\n");
 						/* wait for fd to be transmitted to the respective receiver,
 						 * in order to get a send pipe opened */
