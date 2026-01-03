@@ -1181,6 +1181,7 @@ int receiver_send_socket(int sock, peer *p)
  */
 int peer_send_msg(peer *p, AAAMessage *msg)
 {
+	LM_WARN("XXXXXX peer_send_msg\n");
 	int fd, n;
 	if(!AAABuildMsgBuffer(msg))
 		return 0;
