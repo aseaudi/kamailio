@@ -891,7 +891,9 @@ int Process_CEA(peer *p, AAAMessage *cea)
  */
 void I_Disc(peer *p)
 {
+	LM_WARN("XXXXXX I_Disc\n");
 	if(p->I_sock >= 0) {
+		LM_WARN("XXXXXX I_Disc p->I_sock >=0 %d\n", p->I_sock);
 		close(p->I_sock);
 		p->I_sock = -1;
 	}
@@ -904,7 +906,9 @@ void I_Disc(peer *p)
  */
 void R_Disc(peer *p)
 {
+	LM_WARN("XXXXXX R_Disc\n");
 	if(p->R_sock >= 0) {
+		LM_WARN("XXXXXX R_Disc p->I_sock >=0 %d\n", p->R_sock);
 		close(p->R_sock);
 		p->R_sock = -1;
 	}
