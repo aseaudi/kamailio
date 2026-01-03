@@ -228,6 +228,7 @@ void cb_remove(cdp_cb_t *cb)
  */
 int put_task(peer *p, AAAMessage *msg)
 {
+	LM_WARN("XXXXXX put_task\n");
 
 	struct timeval start, stop;
 	int num_tasks, length_percentage;

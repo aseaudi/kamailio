@@ -99,9 +99,12 @@ int sm_process(
 				case Start:
 					p->state = Wait_Conn_Ack;
 					next_event = I_Snd_Conn_Req(p);
-					if(next_event == I_Rcv_Conn_NAck)
+					LM_WARN("XXXXXX sm_process after I_Snd_Conn_Req\n");
+					if(next_event == I_Rcv_Conn_NAck) {
+						LM_WARN("XXXXXX sm_process after I_Snd_Conn_Req next_event == I_Rcv_Conn_NAck\n");
 						sm_process(p, next_event, 0, 1, p->I_sock);
-					else {
+					} else {
+						LM_WARN("XXXXXX sm_process after I_Snd_Conn_Req next_event == I_Rcv_Conn_Ack, wait for send pipe to be opened\n");
 						/* wait for fd to be transmitted to the respective receiver,
 						 * in order to get a send pipe opened */
 					}
@@ -531,6 +534,7 @@ int sm_process(
 
 	return 1;
 error:
+	LM_WARN("XXXXXX sm_process error\n");
 	if(!peer_locked)
 		lock_release(p->lock);
 	return 0;
@@ -552,10 +556,12 @@ peer_event_t I_Snd_Conn_Req(peer *p)
 		close(p->I_sock);
 	p->I_sock = -1;
 	p->I_sock = peer_connect(p);
+	LM_WARN("XXXXXX I_Snd_Conn_Req after peer_connect, p->I_sock: %d\n", p->I_sock);
 	if(p->I_sock < 0) {
+		LM_WARN("XXXXXX I_Snd_Conn_Req return I_Rcv_Conn_NAck\n");
 		return I_Rcv_Conn_NAck;
 	}
-
+	LM_WARN("XXXXXX I_Snd_Conn_Req return I_Rcv_Conn_Ack\n");
 	return I_Rcv_Conn_Ack;
 }
 
@@ -1345,6 +1351,7 @@ void Snd_Message(peer *p, AAAMessage *msg)
  */
 void Rcv_Process(peer *p, AAAMessage *msg)
 {
+	LM_WARN("XXXXXX Rcv_Process\n");
 	AAASession *session = 0;
 	int nput = 0;
 
@@ -1354,7 +1361,7 @@ void Rcv_Process(peer *p, AAAMessage *msg)
 
 	if(msg->sessionId)
 		session = cdp_get_session(msg->sessionId->data);
-
+	LM_WARN("XXXXXX Rcv_Process after cdp_get_session\n");
 	if(session) {
 		switch(session->type) {
 			case ACCT_CC_CLIENT:

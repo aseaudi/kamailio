@@ -125,22 +125,26 @@ static void log_serviced_peers()
  */
 static int make_send_pipe(serviced_peer_t *sp)
 {
+	LM_WARN("XXXXXX make_send_pipe\n");
 	local_id++;
+	LM_WARN("XXXXXX make_send_pipe local_id: %d\n", local_id);
 	sp->send_pipe_name.s = shm_malloc(sizeof(PIPE_PREFIX) + 64);
 	sprintf(sp->send_pipe_name.s, "%s%d_%d_%u", PIPE_PREFIX, getpid(), local_id,
 			(unsigned int)(unsigned long long)time(0));
 	sp->send_pipe_name.len = strlen(sp->send_pipe_name.s);
-
+	LM_WARN("XXXXXX make_send_pipe send_pipe_name: %.*s\n", sp->send_pipe_name.len, sp->send_pipe_name.s);
 	if(mkfifo(sp->send_pipe_name.s, 0666) < 0) {
 		LM_ERR("make_send_pipe(): FIFO make failed > %s\n", strerror(errno));
 		return 0;
 	}
+	LM_WARN("XXXXXX make_send_pipe after mkfifo\n");
 	sp->send_pipe_fd = open(sp->send_pipe_name.s, O_RDONLY | O_NDELAY);
 	if(sp->send_pipe_fd < 0) {
 		LM_ERR("receiver_init(): FIFO open for read failed > %s\n",
 				strerror(errno));
 		return 0;
 	}
+	LM_WARN("XXXXXX make_send_pipe after open send_pipe for read\n");
 	// we open it for writing just to keep it alive - won't close when all other writers close it
 	sp->send_pipe_fd_out = open(sp->send_pipe_name.s, O_WRONLY);
 	if(sp->send_pipe_fd_out < 0) {
@@ -149,7 +153,7 @@ static int make_send_pipe(serviced_peer_t *sp)
 				strerror(errno));
 		return 0;
 	}
-
+	LM_WARN("XXXXXX make_send_pipe after open send_pipe for write\n");
 	if(sp->p)
 		sp->p->send_pipe_name = sp->send_pipe_name;
 
@@ -162,6 +166,7 @@ static int make_send_pipe(serviced_peer_t *sp)
  */
 static void close_send_pipe(serviced_peer_t *sp)
 {
+	LM_WARN("XXXXXX close_send_pipe\n");
 	int tmp;
 	if(sp->send_pipe_name.s) {
 		if(sp->send_pipe_fd >= 0)
@@ -189,6 +194,7 @@ static void close_send_pipe(serviced_peer_t *sp)
  */
 static serviced_peer_t *add_serviced_peer(peer *p)
 {
+	LM_WARN("XXXXXX add_serviced_peer\n");
 	serviced_peer_t *sp;
 	LM_INFO("add_serviced_peer(): Adding serviced_peer_t to receiver for peer "
 			"[%.*s]\n",
@@ -225,9 +231,10 @@ static serviced_peer_t *add_serviced_peer(peer *p)
  */
 static void disconnect_serviced_peer(serviced_peer_t *sp, int locked)
 {
+	LM_WARN("XXXXXX disconnect_serviced_peer\n");
 	if(!sp)
 		return;
-	LM_INFO("drop_serviced_peer(): [%.*s] Disconnecting from peer \n",
+	LM_WARN("drop_serviced_peer(): [%.*s] Disconnecting from peer \n",
 			sp->p ? sp->p->fqdn.len : 0, sp->p ? sp->p->fqdn.s : 0);
 	if(sp->p) {
 		if(!locked)
@@ -253,9 +260,10 @@ static void disconnect_serviced_peer(serviced_peer_t *sp, int locked)
  */
 static void drop_serviced_peer(serviced_peer_t *sp, int locked)
 {
+	LM_WARN("XXXXXX drop_serviced_peer\n");
 	if(!sp)
 		return;
-	LM_INFO("drop_serviced_peer(): Dropping serviced_peer_t from receiver for "
+	LM_WARN("drop_serviced_peer(): Dropping serviced_peer_t from receiver for "
 			"peer [%.*s]\n",
 			sp->p ? sp->p->fqdn.len : 0, sp->p ? sp->p->fqdn.s : 0);
 
@@ -285,6 +293,7 @@ static void drop_serviced_peer(serviced_peer_t *sp, int locked)
  */
 static int send_fd(int pipe_fd, int fd, peer *p)
 {
+	LM_WARN("XXXXXX send_fd pipe_fd: %d, fd: %d\n", pipe_fd, fd);
 	struct msghdr msg;
 	struct iovec iov[1];
 	int ret;
@@ -327,8 +336,10 @@ static int send_fd(int pipe_fd, int fd, peer *p)
 
 again:
 	ret = sendmsg(pipe_fd, &msg, 0);
+	LM_WARN("XXXXXX send_fd after sendmesg (pipe_fd, &msg, 0), ret: %d\n", ret);
 	if(ret < 0) {
 		if(errno == EINTR)
+			LM_WARN("XXXXXX send_fd after sendmesg errno = EITNR\n");
 			goto again;
 		if((errno != EAGAIN) && (errno != EWOULDBLOCK)) {
 			LM_CRIT("send_fd: sendmsg failed on %d: %s\n", pipe_fd,
@@ -350,6 +361,7 @@ again:
  */
 static int receive_fd(int pipe_fd, int *fd, peer **p)
 {
+	LM_WARN("receive_fd\n");
 	struct msghdr msg;
 	struct iovec iov[1];
 	int new_fd;
@@ -382,10 +394,13 @@ static int receive_fd(int pipe_fd, int *fd, peer **p)
 
 again:
 	ret = recvmsg(pipe_fd, &msg, MSG_DONTWAIT | MSG_WAITALL);
+	LM_WARN("XXXXXX receive_fd after recvmsg ret: %d\n", ret);
 	if(ret < 0) {
 		if(errno == EINTR)
+			LM_WARN("XXXXXX receive_fd after recvmsg errno == EINTR\n");
 			goto again;
 		if((errno == EAGAIN) || (errno == EWOULDBLOCK))
+			LM_WARN("XXXXXX receive_fd after recvmsg (errno == EAGAIN) || (errno == EWOULDBLOCK)\n");
 			goto error;
 		LM_CRIT("receive_fd: recvmsg on %d failed: %s\n", pipe_fd,
 				strerror(errno));
@@ -441,6 +456,7 @@ again:
 
 	return 1;
 error:
+	LM_WARN("XXXXXX receive_fd error\n");
 	return 0;
 }
 
@@ -533,6 +549,7 @@ done:
 
 static inline int do_read(serviced_peer_t *sp, char *dst, int n)
 {
+	LM_WARN("XXXXXX do_read\n");
 #if OPENSSL_VERSION_NUMBER >= 0x10100000L
 	int cnt, ssl_err;
 	char *err_str;
@@ -566,6 +583,7 @@ static inline int do_read(serviced_peer_t *sp, char *dst, int n)
  */
 static inline int do_receive(serviced_peer_t *sp)
 {
+	LM_WARN("XXXXXX do_receive\n");
 	int cnt, n, version;
 	char *dst;
 	AAAMessage *dmsg;
@@ -723,6 +741,7 @@ static int do_write(serviced_peer_t *sp, const void *buf, int num)
  */
 int receive_loop(peer *original_peer)
 {
+	LM_WARN("XXXXXX receive_loop\n");
 	fd_set rfds, efds;
 	struct timeval tv;
 	int n, max = 0, cnt = 0;
@@ -740,9 +759,13 @@ int receive_loop(peer *original_peer)
 	//	if (shutdownx) return -1;
 
 	while(shutdownx && !*shutdownx) {
+		LM_WARN("XXXXXX receive_loop outer while \n");
+
 		n = 0;
 
 		while(!n) {
+			LM_WARN("XXXXXX receive_loop inner while \n");
+
 			if(shutdownx && *shutdownx)
 				break;
 			cfg_update();
@@ -775,8 +798,14 @@ int receive_loop(peer *original_peer)
 			tv.tv_sec = 1;
 			tv.tv_usec = 0;
 
+			LM_WARN("XXXXXX receive_loop before select, max: %d\n", max);
+
 			n = select(max + 1, &rfds, 0, &efds, &tv);
+			
+			LM_WARN("XXXXXX receive_loop after select n: %d\n", n);
+
 			if(n == -1) {
+				LM_ERR("XXXXXX receive_loop error %s\n", strerror(errno));
 				if(shutdownx && *shutdownx)
 					return 0;
 				LM_ERR("select_recv(): %s\n", strerror(errno));
@@ -792,7 +821,7 @@ int receive_loop(peer *original_peer)
 
 				if(FD_ISSET(fd_exchange_pipe_local, &rfds)) {
 					/* fd exchange */
-					LM_DBG("select_recv(): There is something on the fd "
+					LM_WARN("select_recv(): There is something on the fd "
 						   "exchange pipe\n");
 					p = 0;
 					fd = -1;
@@ -800,7 +829,7 @@ int receive_loop(peer *original_peer)
 						LM_ERR("select_recv(): Error reading from fd exchange "
 							   "pipe\n");
 					} else {
-						LM_DBG("select_recv(): fd exchange pipe says fd [%d] "
+						LM_WARN("select_recv(): fd exchange pipe says fd [%d] "
 							   "for peer %p:[%.*s]\n",
 								fd, p, p ? p->fqdn.len : 0, p ? p->fqdn.s : "");
 						if(p) {
@@ -818,7 +847,7 @@ int receive_loop(peer *original_peer)
 								LM_ERR("Error on add_serviced_peer()\n");
 								continue;
 							}
-
+							LM_WARN("XXXXXX receive_loop after make send pipe, preparing to enter sm_process with I_Rcv_Conn_Ack event\n");
 							sp2->tcp_socket = fd;
 							if(p->state == Wait_Conn_Ack) {
 								p->I_sock = fd;
@@ -849,7 +878,7 @@ int receive_loop(peer *original_peer)
 						}
 					}
 				}
-
+				LM_WARN("XXXXXX receive_loop after if FD_ISSET fd_exchange_pipe_local, before for loop for serviced peers\n");
 				for(sp = serviced_peers; sp;) {
 					if(sp->tcp_socket >= 0 && FD_ISSET(sp->tcp_socket, &efds)) {
 						LM_INFO("select_recv(): [%.*s] Peer socket [%d] found "
@@ -924,6 +953,7 @@ int receive_loop(peer *original_peer)
 					}
 				receive:
 					/* receive */
+					LM_WARN("XXXXXX receive_loop receive:\n");
 					if(sp->tcp_socket >= 0 && FD_ISSET(sp->tcp_socket, &rfds)) {
 						errno = 0;
 
@@ -945,6 +975,7 @@ int receive_loop(peer *original_peer)
 					sp = sp->next;
 					continue;
 				drop_peer:
+					LM_WARN("XXXXXX receive_loop drop peer:\n");
 					/* drop this serviced peer on error */
 					sp2 = sp->next;
 					disconnect_serviced_peer(sp, 0);
@@ -968,6 +999,7 @@ int receive_loop(peer *original_peer)
  */
 int peer_connect(peer *p)
 {
+	LM_WARN("XXXXXX peer_connect\n");
 	int sock = -1;
 	int tmp = 0;
 	unsigned int option = 1;
@@ -988,7 +1020,7 @@ int peer_connect(peer *p)
 	sprintf(buf, "%d", p->port);
 
 	error = getaddrinfo(p->fqdn.s, buf, &hints, &res);
-
+	LM_WARN("XXXXXX peer_connect after getaddrinfo\n");
 	if(error != 0) {
 		LM_WARN("peer_connect(): Error opening connection to %.*s:%d >%s\n",
 				p->fqdn.len, p->fqdn.s, p->port, gai_strerror(error));
@@ -1002,7 +1034,7 @@ int peer_connect(peer *p)
 			LM_INFO("peer_connect(): Trying to connect to %s port %s\n", host,
 					serv);
 		}
-
+		LM_WARN("XXXXXX peer_connect before sock=socket\n");
 		if((sock = socket(
 					ainfo->ai_family, ainfo->ai_socktype, ainfo->ai_protocol))
 				== -1) {
@@ -1012,6 +1044,9 @@ int peer_connect(peer *p)
 					host, serv, strerror(errno));
 			continue;
 		}
+		
+		LM_WARN("XXXXXX peer_connect after sock: %d\n", sock);
+
 
 		/* try to set the local socket used to connect to the peer */
 		if(p->src_addr.s && p->src_addr.len > 0) {
@@ -1036,12 +1071,14 @@ int peer_connect(peer *p)
 		}
 
 		{ // Connect with timeout
+			LM_WARN("XXXXXX peer_connect inside connect with timeoute block\n");
 			int x;
 			x = fcntl(sock, F_GETFL, 0);
 			if(fcntl(sock, F_SETFL, x | O_NONBLOCK) < 0) {
 				LM_WARN("failed to set O_NONBLOCK on socket %d\n", sock);
 			}
 			int res = connect(sock, ainfo->ai_addr, ainfo->ai_addrlen);
+			LM_WARN("XXXXXX peer_connect after connect, res: %d\n", res);
 			if(res < 0) {
 				if(errno == EINPROGRESS) {
 					struct timeval tv = {
@@ -1109,6 +1146,8 @@ int peer_connect(peer *p)
 			goto error;
 		}
 
+		LM_WARN("XXXXXX peer-connect after send_fd\n");
+
 		if(res)
 			freeaddrinfo(res);
 		if(sainfo)
@@ -1116,6 +1155,7 @@ int peer_connect(peer *p)
 		return sock;
 	}
 error:
+	LM_WARN("XXXXXX peer-connect error\n");
 	if(res)
 		freeaddrinfo(res);
 	if(sainfo)

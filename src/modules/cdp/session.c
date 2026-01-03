@@ -306,7 +306,8 @@ void cdp_add_session(cdp_session_t *x)
  * @returns the session if found or 0 if not
  */
 cdp_session_t *cdp_get_session(str id)
-{
+{	
+	LM_WARN("XXXXXX cdp_get_session\n");
 	unsigned int hash;
 	cdp_session_t *x;
 	if(!id.len)
