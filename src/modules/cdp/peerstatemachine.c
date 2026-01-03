@@ -552,7 +552,7 @@ error:
  */
 peer_event_t I_Snd_Conn_Req(peer *p)
 {
-	LM_INFO("Peer %.*s \n", p->fqdn.len, p->fqdn.s);
+	LM_WARN("XXXXXX I_Snd_Conn_Req(): Peer %.*s \n", p->fqdn.len, p->fqdn.s);
 
 	if(p->I_sock > 0)
 		close(p->I_sock);
@@ -575,6 +575,10 @@ peer_event_t I_Snd_Conn_Req(peer *p)
  */
 void Cleanup(peer *p, int sock)
 {
+	LM_WARN("XXXXXX Cleanup\n");
+	LM_WARN("XXXXXX Cleanup p->I_sock: %d\n", p->I_sock);
+	LM_WARN("XXXXXX Cleanup sock: %d\n", sock);
+
 	if(sock < 0)
 		return;
 	close(sock);
@@ -655,6 +659,7 @@ static inline void Snd_CE_add_applications(AAAMessage *msg, peer *p)
  */
 void I_Snd_CER(peer *p)
 {
+	LM_WARN("XXXXXX I_Snd_CER\n");
 	AAAMessage *cer = 0;
 	//	AAA_AVP *avp;
 	unsigned long ip;
@@ -674,6 +679,7 @@ void I_Snd_CER(peer *p)
 	cer->hopbyhopId = next_hopbyhop();
 	cer->endtoendId = next_endtoend();
 	addrlen = sizeof(addr_u);
+	LM_WARN("XXXXXX I_Snd_CER before getsockname p->I_sock: %d\n", p->I_sock);
 	if((ret = getsockname(p->I_sock, &(addr_u.addr), &addrlen)) == -1) {
 		LM_ERR("Error on finding local host address > %s\n", strerror(errno));
 		Cleanup(p, p->I_sock);
@@ -891,7 +897,9 @@ int Process_CEA(peer *p, AAAMessage *cea)
  */
 void I_Disc(peer *p)
 {
+	LM_WARN("XXXXXX I_Disc\n");
 	if(p->I_sock >= 0) {
+		LM_WARN("XXXXXX I_Disc p->I_sock >=0 %d\n", p->I_sock);
 		close(p->I_sock);
 		p->I_sock = -1;
 	}
@@ -904,7 +912,9 @@ void I_Disc(peer *p)
  */
 void R_Disc(peer *p)
 {
+	LM_WARN("XXXXXX R_Disc\n");
 	if(p->R_sock >= 0) {
+		LM_WARN("XXXXXX R_Disc p->I_sock >=0 %d\n", p->R_sock);
 		close(p->R_sock);
 		p->R_sock = -1;
 	}
