@@ -57,6 +57,8 @@
 //We use pseudo variables to communicate back to config file. This takes the result, converts it to a return code and publishes it a as pseudo variable.
 int create_uaa_return_code(int result)
 {
+	LM_WARN("XXXXXX create_uaa_return_code\n");
+	LM_WARN("XXXXXX create_uaa_return_code result: %d\n", result);
 	int rc;
 	int_str avp_val, avp_name;
 	avp_name.s.s = "uaa_return_code";
