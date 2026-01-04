@@ -357,12 +357,14 @@ void worker_poison_queue()
  */
 void worker_process(int id)
 {
+	LM_WARN("XXXXXX worker_process\n");
 	task_t t;
 	cdp_cb_t *cb;
 	int r;
 	LM_INFO("[%d] Worker process started...\n", id);
 	/* init the application level for this child */
 	while(1) {
+		LM_WARN("XXXXXX worker_process inside while loop\n");
 		if(shutdownx && (*shutdownx))
 			break;
 		cfg_update();
@@ -379,6 +381,7 @@ void worker_process(int id)
 		for(cb = callbacks->head; cb; cb = cb->next)
 			(*(cb->cb))(t.p, t.msg, *(cb->ptr));
 
+		LM_WARN("XXXXXX worker_process after all callbacks run\n");
 		if(r) {
 			AAAFreeMessage(&(t.msg));
 		} else {

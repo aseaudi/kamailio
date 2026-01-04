@@ -292,6 +292,7 @@ int cxdx_add_authorization_type(AAAMessage *msg, unsigned int data)
  */
 int cxdx_get_result_code(AAAMessage *msg, int *data)
 {
+	LM_WARN("XXXXXX cxdx_get_result_code\n");
 	str s;
 	s = cxdx_get_avp(msg, AVP_Result_Code, 0, __FUNCTION__);
 	if(!s.s)
@@ -307,6 +308,8 @@ int cxdx_get_result_code(AAAMessage *msg, int *data)
  */
 int cxdx_get_experimental_result_code(AAAMessage *msg, int *data)
 {
+	LM_WARN("XXXXXX cxdx_get_experimental_result_code\n");
+
 	AAA_AVP_LIST list;
 	AAA_AVP *avp;
 	str grp;
@@ -336,6 +339,7 @@ int cxdx_get_experimental_result_code(AAAMessage *msg, int *data)
  */
 str cxdx_get_server_name(AAAMessage *msg)
 {
+	LM_WARN("XXXXXX cxdx_get_server_name\n");
 	return cxdx_get_avp(
 			msg, AVP_IMS_Server_Name, IMS_vendor_id_3GPP, __FUNCTION__);
 }
@@ -352,6 +356,7 @@ str cxdx_get_server_name(AAAMessage *msg)
 int cxdx_get_capabilities(AAAMessage *msg, int **m, int *m_cnt, int **o,
 		int *o_cnt, str **p, int *p_cnt)
 {
+	LM_WARN("XXXXXX cxdx_get_capabilities\n");
 	AAA_AVP_LIST list;
 	AAA_AVP *avp;
 	str grp;

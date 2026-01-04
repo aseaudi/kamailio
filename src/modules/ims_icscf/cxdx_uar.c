@@ -91,6 +91,7 @@ void free_saved_uar_transaction_data(saved_uar_transaction_t *data)
 void async_cdp_uar_callback(
 		int is_timeout, void *param, AAAMessage *uaa, long elapsed_msecs)
 {
+	LM_WARN("XXXXXX async_cdp_uar_callback\n");
 	struct run_act_ctx ra_ctx;
 	str server_name;
 	int *m_capab = 0, m_capab_cnt = 0;

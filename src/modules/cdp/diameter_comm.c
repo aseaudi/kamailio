@@ -186,6 +186,7 @@ error:
 AAAReturnCode AAASendMessageToPeer(AAAMessage *message, str *peer_id,
 		AAATransactionCallback_f *callback_f, void *callback_param)
 {
+	LM_WARN("XXXXXX AAASendMessageToPeer\n");
 	peer *p;
 	p = get_peer_by_fqdn(peer_id);
 	if(!p) {
@@ -246,6 +247,7 @@ void sendrecv_cb(
  */
 AAAMessage *AAASendRecvMessage(AAAMessage *message)
 {
+	LM_WARN("XXXXXX AAASendRecvMessage\n");
 	peer *p;
 	gen_sem_t *sem = 0;
 	cdp_trans_t *t;
@@ -323,6 +325,7 @@ out_of_memory:
  */
 AAAMessage *AAASendRecvMessageToPeer(AAAMessage *message, str *peer_id)
 {
+	LM_WARN("XXXXXX AAASendRecvMessageToPeer\n");
 	peer *p;
 	gen_sem_t *sem;
 	cdp_trans_t *t;

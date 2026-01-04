@@ -131,7 +131,9 @@ int api_callback(peer *p, AAAMessage *msg, void *ptr)
 			counter_inc(cdp_cnts_h.replies_received);
 			counter_add(cdp_cnts_h.replies_response_time, elapsed_msecs);
 			auto_drop = t->auto_drop;
+			LM_WARN("XXXXXX api_callback checking if we have transaction callback\n");
 			if(t->cb) {
+				LM_WARN("XXXXXX api_callback running transaction callback\n");
 				(t->cb)(0, *(t->ptr), msg, elapsed_msecs);
 			}
 			if(auto_drop)
