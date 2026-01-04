@@ -76,6 +76,7 @@ int pv_t_copy_msg(struct sip_msg *src, struct sip_msg *dst)
 
 struct sip_msg *get_request_from_tx(struct cell *t)
 {
+	LM_WARN("XXXXXX get_request_from_tx\n");
 	if(t == NULL) {
 		t = tmb.t_gett();
 	}

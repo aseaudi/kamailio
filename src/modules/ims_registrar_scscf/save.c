@@ -864,7 +864,8 @@ int store_explicit_dereg_contact(struct sip_msg *msg,
 int update_contacts(struct sip_msg *msg, udomain_t *_d, str *public_identity,
 		int assignment_type, ims_subscription **s, str *ccf1, str *ccf2,
 		str *ecf1, str *ecf2, contact_for_header_t **contact_header)
-{
+{	
+	LM_WARN("XXXXXX update_contacts\n");
 	int reg_state, i, j, k;
 	ims_public_identity *pi = 0;
 	impurecord_t *impu_rec, *tmp_impu_rec;
@@ -889,6 +890,8 @@ int update_contacts(struct sip_msg *msg, udomain_t *_d, str *public_identity,
 		expires_hdr = cscf_get_expires_hdr(msg,
 				0); //get the expires from the main body of the sip message (global)
 	}
+
+	LM_WARN("XXXXXX update_contacts before switch(assignment_type)\n");
 
 	switch(assignment_type) {
 		case AVP_IMS_SAR_REGISTRATION:
@@ -1351,6 +1354,8 @@ int update_contacts(struct sip_msg *msg, udomain_t *_d, str *public_identity,
 			LM_ERR("unimplemented assignment_type when trying to update "
 				   "contacts\n");
 	}
+
+	LM_WARN("XXXXXX update_contacts after switch(assignment_type)\n");
 
 	if(explicit_dereg_contact) {
 		shm_free(explicit_dereg_contact);

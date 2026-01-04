@@ -242,6 +242,7 @@ int check_contacts(struct sip_msg *_m, int *_s)
  */
 int parse_message_for_register(struct sip_msg *_m)
 {
+	LM_WARN("XXXXXX parse_message_for_register\n");
 	struct hdr_field *ptr;
 
 	if(parse_headers(_m, HDR_EOH_F, 0) == -1) {

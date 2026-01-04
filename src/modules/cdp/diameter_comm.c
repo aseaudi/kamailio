@@ -134,6 +134,7 @@ int AAAAddResponseHandler(AAAResponseHandler_f *f, void *param)
 AAAReturnCode AAASendMessage(AAAMessage *message,
 		AAATransactionCallback_f *callback_f, void *callback_param)
 {
+	LM_WARN("XXXXXX AAASendMessage\n");
 	cdp_session_t *cdp_session;
 	peer *p;
 	cdp_session = cdp_get_session(message->sessionId->data);
@@ -154,17 +155,18 @@ AAAReturnCode AAASendMessage(AAAMessage *message,
 	}
 	/* only add transaction following when required */
 	if(callback_f) {
+		LM_WARN("XXXXXX AAASendMessage inside if(callback_f)\n");
 		if(is_req(message))
 			cdp_add_trans(message, callback_f, callback_param,
 					config->transaction_timeout, 1);
 		else
 			LM_ERR("can't add transaction callback for answer.\n");
 	}
-
+	LM_WARN("XXXXXX AAASendMessage before sm_process(p, Send_Message, message, 0, 0)\n");
 	//	if (!peer_send_msg(p,message))
 	if(!sm_process(p, Send_Message, message, 0, 0))
 		goto error;
-
+	LM_WARN("XXXXXX AAASendMessage after sm_process(p, Send_Message, message, 0, 0)\n");
 	return 1;
 error:
 	AAAFreeMessage(&message);

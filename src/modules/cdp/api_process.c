@@ -67,6 +67,7 @@ gen_lock_t *handlers_lock;	/**< lock for list of handlers */
  */
 int api_callback(peer *p, AAAMessage *msg, void *ptr)
 {
+	LM_WARN("XXXXXX api_callback\n");
 	cdp_trans_t *t;
 	int auto_drop;
 	handler *h;
@@ -78,7 +79,10 @@ int api_callback(peer *p, AAAMessage *msg, void *ptr)
 	else
 		type = RESPONSE_HANDLER;
 
+	LM_WARN("XXXXXX api_callback handler type: %d", type);
+
 	lock_get(handlers_lock);
+	LM_WARN("XXXXXX api_callback after lock_get(hanlders_lock) outside for\n");
 	for(h = handlers->head; h; h = h->next) {
 		if(h->type == type) {
 			x.handler = h->handler;
@@ -98,11 +102,15 @@ int api_callback(peer *p, AAAMessage *msg, void *ptr)
 		}
 	}
 	lock_release(handlers_lock);
+	LM_WARN("XXXXXX api_callback after lock_release(hanlders_lock) outside for\n");
 
 	if(!is_req(msg)) {
+		LM_WARN("XXXXXX api_callback if(!is_req(msg)) take care of transactional callback if any\n");
 		/* take care of transactional callback if any */
 		t = cdp_take_trans(msg);
+		LM_WARN("XXXXXX api_callback after cdp_take_trans(msg)\n");
 		if(t) {
+			LM_WARN("XXXXXX api_callback found transaction\n");
 			t->ans = msg;
 			struct timeval stop;
 			gettimeofday(&stop, NULL);

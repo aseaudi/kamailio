@@ -371,6 +371,7 @@ str cscf_get_public_identity_from(struct sip_msg *msg)
  */
 int cscf_get_expires_hdr(struct sip_msg *msg, int is_shm)
 {
+	LM_WARN("XXXXXX cscf_get_expires_hdr\n");
 	exp_body_t *exp;
 	int expires;
 	if(!msg)

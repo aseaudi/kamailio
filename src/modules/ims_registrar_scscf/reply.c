@@ -699,6 +699,7 @@ int build_p_associated_uri(ims_subscription *s)
 int reg_send_reply_transactional(struct sip_msg *_m,
 		contact_for_header_t *contact_header, struct cell *t_cell)
 {
+	LM_WARN("XXXXXX reg_send_reply_transactional\n");
 	str unsup = str_init(OPTION_TAG_PATH_STR);
 	long code;
 	str msg = str_init(MSG_200); /* makes gcc shut up */

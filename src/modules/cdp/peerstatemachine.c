@@ -1252,6 +1252,7 @@ int Elect(peer *p, AAAMessage *cer)
  */
 void Snd_Message(peer *p, AAAMessage *msg)
 {
+	LM_WARN("XXXXXX Snd_Message\n");
 	AAASession *session = 0;
 	int rcode;
 	int send_message_before_session_sm = 0;

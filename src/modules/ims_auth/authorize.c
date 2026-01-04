@@ -1802,7 +1802,7 @@ int multimedia_auth_request(struct sip_msg *msg, str public_identity,
 	}
 
 
-	LM_DBG("Sending MAR\n");
+	LM_WARN("Sending MAR\n");
 	result = cxdx_send_mar(msg, public_identity, private_identity, count,
 			auth_scheme, authorization, servername, transaction_data);
 	if(authorization.s)

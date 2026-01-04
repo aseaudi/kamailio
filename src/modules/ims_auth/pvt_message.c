@@ -74,7 +74,9 @@ int pv_t_copy_msg(struct sip_msg *src, struct sip_msg *dst)
 
 struct sip_msg *get_request_from_tx(struct cell *t)
 {
+	LM_WARN("XXXXXX get_request_from_tx\n");
 	if(t == NULL) {
+		LM_WARN("XXXXXX get_request_from_txt == NULL\n");
 		t = tmb.t_gett();
 	}
 	if(!t || t == (void *)-1) {
@@ -82,7 +84,7 @@ struct sip_msg *get_request_from_tx(struct cell *t)
 		return 0;
 	}
 	if(t) {
-
+		LM_WARN("XXXXXX get_request_from_tx t != NULL\n");
 		/*  we may need the request message from here on.. if there are headers we need that were not parsed in the original request
         (which we cannot assume) then we would pollute the shm_msg t->uas.request if we did any parsing on it. Instead, we need to
         make a private copy of the message and free it when we are done

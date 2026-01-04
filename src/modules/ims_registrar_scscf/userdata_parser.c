@@ -1050,6 +1050,7 @@ static ims_subscription *parse_ims_subscription(xmlDocPtr doc, xmlNodePtr root)
  */
 ims_subscription *parse_user_data(str xml)
 {
+	LM_WARN("XXXXXX parse_user_data\n");
 	xmlDocPtr doc = 0;
 	xmlNodePtr root = 0;
 	ims_subscription *s = 0;

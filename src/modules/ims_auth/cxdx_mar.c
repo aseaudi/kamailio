@@ -87,6 +87,7 @@ int create_return_code(int result)
 
 void free_saved_transaction_data(saved_transaction_t *data)
 {
+	LM_WARN("XXXXXX free_saved_transaction_data\n");
 	if(!data)
 		return;
 	LM_DBG("Freeing saved transaction data: async\n");
@@ -101,6 +102,7 @@ void free_saved_transaction_data(saved_transaction_t *data)
 void async_cdp_callback(
 		int is_timeout, void *param, AAAMessage *maa, long elapsed_msecs)
 {
+	LM_WARN("XXXXXX async_cdp_callback\n");
 	int i, j;
 	int rc = -1, experimental_rc = -1;
 	saved_transaction_t *data = (saved_transaction_t *)param;
@@ -337,6 +339,8 @@ void async_cdp_callback(
 
 success:
 
+	LM_WARN("XXXXXX async_cdp_callback success\n");
+
 	if(!sip_number_auth_items || !items_found) {
 		stateful_request_reply_async(t, req, 403, MSG_403_NO_AUTH_DATA);
 		result = CSCF_RETURN_FALSE;
@@ -449,6 +453,7 @@ success:
 	}
 
 done:
+	LM_WARN("XXXXXX async_cdp_callback done\n");
 
 	if(avlist) {
 		if(!data->is_resync) //only start the timer if we used the vector above - we don't use it resync mode
@@ -498,6 +503,7 @@ done:
 	return;
 
 error:
+	LM_WARN("XXXXXX async_cdp_callback error\n");
 	//don't need to set result code as by default it is ERROR!
 
 	if(t) {
@@ -507,6 +513,7 @@ error:
 	tmb.t_continue(data->tindex, data->tlabel, data->act);
 
 error1:
+	LM_WARN("XXXXXX async_cdp_callback error1\n");
 	free_saved_transaction_data(data);
 }
 
@@ -527,6 +534,8 @@ int cxdx_send_mar(struct sip_msg *msg, str public_identity,
 		str authorization, str server_name,
 		saved_transaction_t *transaction_data)
 {
+	LM_WARN("XXXXXX cxdx_send_mar\n");
+
 	AAAMessage *mar = 0;
 	AAASession *session = 0;
 
@@ -585,7 +594,7 @@ int cxdx_send_mar(struct sip_msg *msg, str public_identity,
 				mar, (void *)async_cdp_callback, (void *)transaction_data);
 
 
-	LM_DBG("Successfully sent async diameter\n");
+	LM_WARN("Successfully sent async diameter\n");
 
 	return 0;
 

@@ -66,6 +66,7 @@ static str s_empty = {0, 0};
 static int cxdx_add_avp(AAAMessage *m, char *d, int len, int avp_code,
 		int flags, int vendorid, int data_do, const char *func)
 {
+	LM_WARN("XXXXXX cxdx_add_avp\n");
 	AAA_AVP *avp;
 	if(vendorid != 0)
 		flags |= AAA_AVP_FLAG_VENDOR_SPECIFIC;
@@ -133,6 +134,7 @@ static str cxdx_get_avp(
 {
 	AAA_AVP *avp;
 	str r = {0, 0};
+	LM_WARN("XXXXXX cxdx_get_avp\n");
 
 	avp = cdpb.AAAFindMatchingAVP(msg, 0, avp_code, vendor_id, 0);
 	if(avp == 0) {
@@ -271,6 +273,7 @@ int cxdx_add_visited_network_id(AAAMessage *msg, str data)
 int cxdx_add_UAR_flags(AAAMessage *msg, unsigned int sos_reg)
 {
 
+	LM_WARN("XXXXXX cxdx_add_UAR_flags\n");
 	char x[4];
 	/* optional AVP*/
 	if(!sos_reg)
@@ -304,6 +307,7 @@ int cxdx_add_authorization_type(AAAMessage *msg, unsigned int data)
 int cxdx_get_result_code(AAAMessage *msg, int *data)
 {
 	str s;
+	LM_WARN("XXXXXX cxdx_get_result_code\n");
 	s = cxdx_get_avp(msg, AVP_Result_Code, 0, __FUNCTION__);
 	if(!s.s)
 		return 0;
@@ -321,6 +325,7 @@ int cxdx_get_experimental_result_code(AAAMessage *msg, int *data)
 	AAA_AVP_LIST list;
 	AAA_AVP *avp;
 	str grp;
+	LM_WARN("XXXXXX cxdx_get_experimental_result_code\n");
 	grp = cxdx_get_avp(msg, AVP_IMS_Experimental_Result, 0, __FUNCTION__);
 	if(!grp.s)
 		return 0;
@@ -347,6 +352,7 @@ int cxdx_get_experimental_result_code(AAAMessage *msg, int *data)
  */
 str cxdx_get_server_name(AAAMessage *msg)
 {
+	LM_WARN("XXXXXX cxdx_get_server_name\n");
 	return cxdx_get_avp(
 			msg, AVP_IMS_Server_Name, IMS_vendor_id_3GPP, __FUNCTION__);
 }
@@ -366,6 +372,7 @@ int cxdx_get_capabilities(AAAMessage *msg, int **m, int *m_cnt, int **o,
 	AAA_AVP_LIST list;
 	AAA_AVP *avp;
 	str grp;
+	LM_WARN("XXXXXX cxdx_get_capabilities\n");
 	grp = cxdx_get_avp(
 			msg, AVP_IMS_Server_Capabilities, IMS_vendor_id_3GPP, __FUNCTION__);
 	if(!grp.s)
@@ -442,6 +449,7 @@ error:
 int cscf_reply_transactional(struct sip_msg *msg, int code, char *text)
 {
 	unsigned int hash, label;
+	LM_WARN("XXXXXX cscf_reply_transactional\n");
 	if(tmb.t_get_trans_ident(msg, &hash, &label) < 0) {
 
 		if(tmb.t_newtran(msg) < 0)
@@ -569,6 +577,7 @@ int cxdx_get_auth_data_item_answer(AAAMessage *msg, AAA_AVP **auth_data,
 	str grp;
 	ha1->s = 0;
 	ha1->len = 0;
+	LM_WARN("XXXXXX cxdx_get_auth_data_item_answer\n");
 	*auth_data = cdpb.AAAFindMatchingAVP(
 			msg, *auth_data, AVP_IMS_SIP_Auth_Data_Item, IMS_vendor_id_3GPP, 0);
 	if(!*auth_data)
@@ -855,6 +864,7 @@ str cxdx_ETSI_sip_authorization(str username, str realm, str nonce, str URI,
 
 str cxdx_get_user_data(AAAMessage *msg)
 {
+	LM_WARN("XXXXXX cxdx_get_user_data\n");
 	return cxdx_get_avp(
 			msg, AVP_IMS_User_Data_Cx, IMS_vendor_id_3GPP, __FUNCTION__);
 }
@@ -870,6 +880,7 @@ int cxdx_get_charging_info(
 	AAA_AVP_LIST list;
 	AAA_AVP *avp;
 	str grp;
+	LM_WARN("XXXXXX cxdx_get_charging_info\n");
 	grp = cxdx_get_avp(msg, AVP_IMS_Charging_Information, IMS_vendor_id_3GPP,
 			__FUNCTION__);
 	if(!grp.s)
@@ -919,6 +930,7 @@ int cxdx_get_charging_info(
 int cxdx_add_server_assignment_type(AAAMessage *msg, unsigned int data)
 {
 	char x[4];
+	LM_WARN("XXXXXX cxdx_add_server_assignment_type\n");
 	set_4bytes(x, data);
 	return cxdx_add_avp(msg, x, 4, AVP_IMS_Server_Assignment_Type,
 			AAA_AVP_FLAG_MANDATORY | AAA_AVP_FLAG_VENDOR_SPECIFIC,
@@ -953,6 +965,7 @@ AAA_AVP *cxdx_get_next_public_identity(AAAMessage *msg, AAA_AVP *pos,
 		int avp_code, int vendor_id, const char *func)
 {
 	AAA_AVP *avp;
+	LM_WARN("XXXXXX cxdx_get_next_public_identity\n");
 
 	avp = cdpb.AAAFindMatchingAVP(msg, pos, avp_code, vendor_id, 0);
 	if(avp == 0) {
@@ -969,6 +982,7 @@ AAA_AVP *cxdx_get_next_public_identity(AAAMessage *msg, AAA_AVP *pos,
  */
 str cxdx_get_user_name(AAAMessage *msg)
 {
+	LM_WARN("XXXXXX cxdx_get_user_name\n");
 	return cxdx_get_avp(msg, AVP_User_Name, 0, __FUNCTION__);
 }
 

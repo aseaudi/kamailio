@@ -249,6 +249,7 @@ peer *get_routing_peer_by_app_id(cdp_session_t *cdp_session,
  */
 peer *get_routing_peer(cdp_session_t *cdp_session, AAAMessage *m)
 {
+	LM_WARN("XXXXXX get_routing_peer\n");
 	str destination_realm = {0, 0}, destination_host = {0, 0};
 	AAA_AVP *avp, *avp_vendor, *avp2;
 	AAA_AVP_LIST group;

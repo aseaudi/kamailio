@@ -133,6 +133,7 @@ static int cxdx_add_avp_list(AAA_AVP_LIST *list, char *d, int len, int avp_code,
 static str cxdx_get_avp(
 		AAAMessage *msg, int avp_code, int vendor_id, const char *func)
 {
+	LM_WARN("XXXXXX cxdx_get_avp\n");
 	AAA_AVP *avp;
 	str r = {0, 0};
 
@@ -299,6 +300,7 @@ int cxdx_add_authorization_type(AAAMessage *msg, unsigned int data)
  */
 int cxdx_get_result_code(AAAMessage *msg, int *data)
 {
+	LM_WARN("XXXXXX cxdx_get_result_code\n");
 	str s;
 	s = cxdx_get_avp(msg, AVP_Result_Code, 0, __FUNCTION__);
 	if(!s.s)
@@ -314,6 +316,7 @@ int cxdx_get_result_code(AAAMessage *msg, int *data)
  */
 int cxdx_get_experimental_result_code(AAAMessage *msg, int *data)
 {
+	LM_WARN("XXXXXX cxdx_get_experimental_result_code\n");
 	AAA_AVP_LIST list;
 	AAA_AVP *avp;
 	str grp;
@@ -851,6 +854,7 @@ str cxdx_ETSI_sip_authorization(str username, str realm, str nonce, str URI,
 
 str cxdx_get_user_data(AAAMessage *msg)
 {
+	LM_WARN("XXXXXX cxdx_get_user_data\n");
 	return cxdx_get_avp(
 			msg, AVP_IMS_User_Data_Cx, IMS_vendor_id_3GPP, __FUNCTION__);
 }
@@ -863,6 +867,7 @@ str cxdx_get_user_data(AAAMessage *msg)
 int cxdx_get_charging_info(
 		AAAMessage *msg, str *ccf1, str *ccf2, str *ecf1, str *ecf2)
 {
+	LM_WARN("XXXXXX cxdx_get_charging_info\n");
 	AAA_AVP_LIST list;
 	AAA_AVP *avp;
 	str grp;

@@ -71,6 +71,7 @@ extern unsigned int send_vs_callid_avp;
 
 int create_return_code(int result)
 {
+	LM_WARN("XXXXXX create_return_code\n");
 	int rc;
 	int_str avp_val, avp_name;
 	avp_name.s.s = "saa_return_code";
@@ -92,6 +93,7 @@ int create_return_code(int result)
 
 void free_saved_transaction_data(saved_transaction_t *data)
 {
+	LM_WARN("XXXXXX free_saved_transaction_data\n");
 	if(!data)
 		return;
 
@@ -106,6 +108,7 @@ void free_saved_transaction_data(saved_transaction_t *data)
 void async_cdp_callback(
 		int is_timeout, void *param, AAAMessage *saa, long elapsed_msecs)
 {
+	LM_WARN("XXXXXX async_cdp_callback\n");
 	struct cell *t = 0;
 	int rc = -1, experimental_rc = -1;
 	int result = CSCF_RETURN_TRUE;
@@ -118,7 +121,7 @@ void async_cdp_callback(
 	rerrno = R_FINE;
 
 	if(!param) {
-		LM_DBG("No transaction data this must have been called from usrloc cb "
+		LM_WARN("No transaction data this must have been called from usrloc cb "
 			   "impu deleted - just log result code and then exit");
 		cxdx_get_result_code(saa, &rc);
 		cxdx_get_experimental_result_code(saa, &experimental_rc);
@@ -149,7 +152,7 @@ void async_cdp_callback(
 		}
 
 	} else {
-		LM_DBG("There is transaction data this must have been called from save "
+		LM_WARN("There is transaction data this must have been called from save "
 			   "or assign server unreg");
 		data = (saved_transaction_t *)param;
 		if(tmb.t_lookup_ident(&t, data->tindex, data->tlabel) < 0) {
@@ -212,6 +215,7 @@ void async_cdp_callback(
 			rerrno = R_SAR_FAILED;
 			goto error;
 		}
+		LM_WARN("XXXXXX async_cdp_callback before switch(rd)\n");
 
 		switch(rc) {
 			case -1:
@@ -285,12 +289,14 @@ void async_cdp_callback(
 	}
 
 success:
+	LM_WARN("XXXXXX async_cdp_callback success\n");
 	update_stat(accepted_registrations, 1);
 
 done:
+	LM_WARN("XXXXXX async_cdp_callback done\n");
 	if(data->sar_assignment_type != AVP_IMS_SAR_UNREGISTERED_USER)
 		reg_send_reply_transactional(req, data->contact_header, t);
-	LM_DBG("DBG:SAR Async CDP callback: ... Done resuming transaction\n");
+	LM_WARN("DBG:SAR Async CDP callback: ... Done resuming transaction\n");
 
 	create_return_code(result);
 
@@ -313,12 +319,14 @@ done:
 	return;
 
 error:
+	LM_WARN("XXXXXX async_cdp_callback error\n");
 	create_return_code(-2);
 	if(data->sar_assignment_type != AVP_IMS_SAR_UNREGISTERED_USER)
 		reg_send_reply_transactional(req, data->contact_header, t);
 
-error_no_send
-	: //if we don't have the transaction then we can't send a transaction response
+error_no_send: 
+	LM_WARN("XXXXXX async_cdp_callback error_no_send\n");
+	//if we don't have the transaction then we can't send a transaction response
 	update_stat(rejected_registrations, 1);
 	//free memory
 	if(saa)
@@ -346,6 +354,8 @@ int cxdx_send_sar(struct sip_msg *msg, str public_identity,
 		str private_identity, str server_name, int assignment_type,
 		int data_available, saved_transaction_t *transaction_data)
 {
+	LM_WARN("XXXXXX cxdx_send_sar\n");
+
 	AAAMessage *sar = 0;
 	AAASession *session = 0;
 	unsigned int hash = 0, label = 0;
@@ -405,11 +415,15 @@ int cxdx_send_sar(struct sip_msg *msg, str public_identity,
 		cdpb.AAASendMessage(
 				sar, (void *)async_cdp_callback, (void *)transaction_data);
 
+	LM_WARN("Successfully sent async diameter\n");
+
 	return 0;
 
 error1: //Only free SAR IFF it has not been passed to CDP
 	if(sar)
 		cdpb.AAAFreeMessage(&sar);
+
+	LM_ERR("Error occurred trying to send SAR\n");
 
 	return -1;
 }

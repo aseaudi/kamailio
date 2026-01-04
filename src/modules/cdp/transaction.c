@@ -103,6 +103,7 @@ int cdp_trans_destroy()
 cdp_trans_t *cdp_add_trans(AAAMessage *msg, AAATransactionCallback_f *cb,
 		void *ptr, int timeout, int auto_drop)
 {
+	LM_WARN("XXXXXX cdp_add_trans\n");
 	cdp_trans_t *x;
 	x = shm_malloc(sizeof(cdp_trans_t));
 	if(!x) {
@@ -169,8 +170,10 @@ void del_trans(AAAMessage *msg)
  */
 cdp_trans_t *cdp_take_trans(AAAMessage *msg)
 {
+	LM_WARN("XXXXXX cdp_take_trans\n");
 	cdp_trans_t *x;
 	lock_get(trans_list->lock);
+	LM_WARN("XXXXXX cdp_take_trans after lock_get(trans_list->lock)\n");
 	x = trans_list->head;
 	while(x && x->endtoendid != msg->endtoendId
 			&& x->hopbyhopid != msg->hopbyhopId)
@@ -186,6 +189,7 @@ cdp_trans_t *cdp_take_trans(AAAMessage *msg)
 			trans_list->tail = x->prev;
 	}
 	lock_release(trans_list->lock);
+	LM_WARN("XXXXXX cdp_take_trans after lock_release(trans_list->lock)\n");
 	return x;
 }
 
