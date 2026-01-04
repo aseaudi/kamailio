@@ -371,7 +371,7 @@ int proxy_authenticate(struct sip_msg* _m, char* _realm, char* _table) {
 int ims_challenge(struct sip_msg *msg, str *prealm, str *palg,
 		int is_proxy_auth, str *proute_name)
 {
-
+	LM_WARN("XXXXXX ims_challenge\n");
 	str realm = {0, 0}, algo = {0, 0};
 	unsigned int aud_hash;
 	str private_identity, public_identity, auts = {0, 0}, nonce = {0, 0};

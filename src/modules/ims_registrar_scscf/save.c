@@ -1371,6 +1371,7 @@ error:
 int assign_server_unreg(
 		struct sip_msg *_m, char *str1, str *direction, char *route)
 {
+	LM_WARN("XXXXXX assign_server_unreg\n");
 	str private_identity = {0, 0}, public_identity = {0, 0};
 	int assignment_type = AVP_IMS_SAR_NO_ASSIGNMENT;
 	int data_available = AVP_IMS_SAR_USER_DATA_NOT_AVAILABLE;
@@ -1512,6 +1513,7 @@ error:
 
 int save(struct sip_msg *msg, char *str1, char *route, int _cflags)
 {
+	LM_WARN("XXXXXX save\n");
 	int expires;
 	int require_user_data = 0;
 	int data_available;

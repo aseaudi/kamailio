@@ -62,6 +62,7 @@ extern int route_uar_user_unknown_no;
 int I_perform_user_authorization_request(
 		struct sip_msg *msg, char *route, char *str1, char *str2)
 {
+	LM_WARN("XXXXXX I_perform_user_authorization_request\n");
 	str private_identity, public_identity, visited_network_id;
 	int authorization_type = AVP_IMS_UAR_REGISTRATION;
 	int expires = 3600;
