@@ -294,7 +294,7 @@ int put_task(peer *p, AAAMessage *msg)
 					length_percentage, num_tasks);
 		}
 	}
-	int num_tasks = tasks->end - tasks->start;
+	// int num_tasks = tasks->end - tasks->start;
 	LM_ERR("Added task to task queue.  Queue length [%i]\n", num_tasks);
 
 
