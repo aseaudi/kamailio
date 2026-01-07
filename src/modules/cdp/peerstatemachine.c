@@ -1439,6 +1439,9 @@ void Rcv_Process(peer *p, AAAMessage *msg)
 		LM_ERR("Queue refused task\n");
 		AAAFreeMessage(&msg);
 	}
+
+	LM_WARN("XXXXXX Rcv_Process after put_task\n");
+
 	//if (msg) LM_ERR("task added to queue command %d, flags %#1x endtoend %u hopbyhop %u\n",msg->commandCode,msg->flags,msg->endtoendId,msg->hopbyhopId);
 
 	//	AAAPrintMessage(msg);

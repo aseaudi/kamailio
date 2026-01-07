@@ -237,10 +237,13 @@ int put_task(peer *p, AAAMessage *msg)
 
 	long elapsed_useconds = 0, elapsed_seconds = 0, elapsed_millis = 0;
 	lock_get(tasks->lock);
+	LM_WARN("XXXXXX put_task after lock_get(tasks->lock)\n");
 
 	gettimeofday(&start, NULL);
 	while((tasks->end + 1) % tasks->max == tasks->start) {
+		LM_WARN("XXXXXX put_task inside while (tasks->end + 1) % tasks->max == tasks->start)\n");
 		lock_release(tasks->lock);
+		LM_WARN("XXXXXX put_task inside while after inside while after lock_release(tasks->lock)\n");
 
 		if(*shutdownx) {
 			sem_release(tasks->full);
@@ -255,9 +258,12 @@ int put_task(peer *p, AAAMessage *msg)
 		}
 
 		lock_get(tasks->lock);
+		LM_WARN("XXXXXX put_task inside while after inside while after lock_get(tasks->lock)\n");
 	}
 
 	counter_inc(cdp_cnts_h.queuelength);
+	LM_WARN("XXXXXX put_task after counter_inc(cdp_cnts_h.queuelength)\n");
+
 
 	gettimeofday(&stop, NULL);
 	elapsed_useconds = stop.tv_usec - start.tv_usec;
@@ -277,6 +283,7 @@ int put_task(peer *p, AAAMessage *msg)
 		LM_WARN("Error releasing tasks->empty semaphore > %s!\n",
 				strerror(errno));
 	lock_release(tasks->lock);
+	LM_WARN("XXXXXX put_task after lock_release(tasks->lock)\n");
 
 	if(workerq_length_threshold_percentage > 0) {
 		num_tasks = tasks->end - tasks->start;
@@ -287,8 +294,8 @@ int put_task(peer *p, AAAMessage *msg)
 					length_percentage, num_tasks);
 		}
 	}
-	//int num_tasks = tasks->end - tasks->start;
-	//LM_ERR("Added task to task queue.  Queue length [%i]\n", num_tasks);
+	int num_tasks = tasks->end - tasks->start;
+	LM_ERR("Added task to task queue.  Queue length [%i]\n", num_tasks);
 
 
 	return 1;
@@ -301,34 +308,50 @@ int put_task(peer *p, AAAMessage *msg)
  */
 task_t take_task()
 {
+	LM_WARN("XXXXXX take_task\n");
+	LM_WARN("XXXXXX take_task tasks start: %d\n", tasks->start);
+	LM_WARN("XXXXXX take_task tasks end: %d\n", tasks->end);
+
 	task_t t = {0, 0};
 	lock_get(tasks->lock);
+	LM_WARN("XXXXXX take_task aftet lock_get(tasks->lock)\n");
 	while(tasks->start == tasks->end) {
+		LM_WARN("XXXXXX take_task inside while (tasks->start == tasks->end)\n");
 		lock_release(tasks->lock);
+		LM_WARN("XXXXXX take_task inside while after lock_release\n");
+
 		if(*shutdownx) {
 			sem_release(tasks->empty);
 			return t;
 		}
+		LM_WARN("XXXXXX take_task inside while before sem_get(tasks->empty)\n");
 		sem_get(tasks->empty);
+		LM_WARN("XXXXXX take_task inside while after sem_get(tasks->empty)\n");
 		if(*shutdownx) {
 			sem_release(tasks->empty);
 			return t;
 		}
 
 		lock_get(tasks->lock);
+		LM_WARN("XXXXXX take_task inside while aftet lock_get(tasks->lock)\n");
 	}
 
 	counter_add(cdp_cnts_h.queuelength, -1);
+	LM_WARN("XXXXXX take_task after counter_add\n");
 	t = tasks->queue[tasks->start];
 	tasks->queue[tasks->start].msg = 0;
 	tasks->start = (tasks->start + 1) % tasks->max;
 	if(sem_release(tasks->full) < 0)
 		LM_WARN("Error releasing tasks->full semaphore > %s!\n",
 				strerror(errno));
-	lock_release(tasks->lock);
 
-	//int num_tasks = tasks->end - tasks->start;
-	//LM_ERR("Taken task from task queue.  Queue length [%i]\n", num_tasks);
+	LM_WARN("XXXXXX take_task aftet sem_release(tasks->full)\n");
+
+	lock_release(tasks->lock);
+	LM_WARN("XXXXXX take_task aftet lock_release(tasks->lock)\n");
+
+	int num_tasks = tasks->end - tasks->start;
+	LM_ERR("Taken task from task queue.  Queue length [%i]\n", num_tasks);
 
 
 	return t;
@@ -365,10 +388,14 @@ void worker_process(int id)
 	/* init the application level for this child */
 	while(1) {
 		LM_WARN("XXXXXX worker_process inside while loop\n");
+		LM_WARN("XXXXXX worker_process inside while loop tasks start: %d\n", tasks->start);
+		LM_WARN("XXXXXX worker_process inside while loop tasks end: %d\n", tasks->end);
+
 		if(shutdownx && (*shutdownx))
 			break;
 		cfg_update();
 		t = take_task();
+		LM_WARN("XXXXXX worker_process inside while loop after take_task\n");
 		if(!t.msg) {
 			if(shutdownx && (*shutdownx))
 				break;
