@@ -1032,6 +1032,7 @@ void free_ims_subscription_data(ims_subscription *s)
 
 int compare_subscription(ims_subscription *new, ims_subscription *orig)
 {
+	LM_WARN("XXXXXX compare_subscription\n");
 	int i, j, k, l;
 	LM_DBG("Comparing subscription for IMPI [%.*s]\n",
 			orig->private_identity.len, orig->private_identity.s);
@@ -1108,6 +1109,7 @@ int update_impurecord(struct udomain *_d, str *public_identity,
 		int barring, int is_primary, ims_subscription **s, str *ccf1, str *ccf2,
 		str *ecf1, str *ecf2, struct impurecord **_r)
 {
+	LM_WARN("XXXXXX update_impurecord\n");
 	int res;
 	struct ims_subscription_s *subscription, *subs_ptr = 0;
 	int leave_slot_locked = 1;
@@ -1135,6 +1137,7 @@ int update_impurecord(struct udomain *_d, str *public_identity,
 					subs_ptr); //we reference coz we are using it - will be unreferenced later.
 			add_subscription_unsafe(subs_ptr);
 			unlock_subscription_slot(subs_ptr->sl);
+			LM_WARN("XXXXXX get_subscription after unlock_subscription_slot(sl)\n");
 		} else {
 			//TODO: we may want to do a deep comparison of the subscription and update....
 			if(compare_subscription(subs_ptr, subscription) != 0) {
@@ -1145,6 +1148,7 @@ int update_impurecord(struct udomain *_d, str *public_identity,
 						subs_ptr); //we reference coz we are using it - will be unreferenced later.
 				add_subscription_unsafe(subs_ptr);
 				unlock_subscription_slot(subs_ptr->sl);
+				LM_WARN("XXXXXX get_subscription after unlock_subscription_slot(sl)\n");
 			}
 		}
 		lock_subscription(subs_ptr);

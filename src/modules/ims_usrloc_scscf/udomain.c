@@ -925,12 +925,16 @@ int get_impus_from_subscription_as_string(udomain_t *_d, impurecord_t *impu_rec,
  */
 int get_subscription(str *impi_s, ims_subscription **s, int leave_slot_locked)
 {
+	LM_WARN("XXXXXX get_subscription\n");
+	LM_WARN("XXXXXX get_subscription leave_slot_locked %d\n", leave_slot_locked);
 	int subscription_hash, sl;
 	ims_subscription *ptr;
 
 	subscription_hash = core_hash(impi_s, 0, 0);
 	sl = subscription_hash & (subs_hash_size - 1);
+	// XXXXXXXXXXX 
 	lock_subscription_slot(sl);
+	LM_WARN("XXXXXX get_subscription after lock_subscription_slot(sl)\n");
 	ptr = ims_subscription_list->slot[sl].first;
 	while(ptr) {
 		if((impi_s->len == ptr->private_identity.len)
@@ -943,12 +947,16 @@ int get_subscription(str *impi_s, ims_subscription **s, int leave_slot_locked)
 			ref_subscription_unsafe(ptr);
 			unlock_subscription(ptr);
 			unlock_subscription_slot(sl);
+			LM_WARN("XXXXXX get_subscription after unlock_subscription_slot(sl)\n");
 			return 0;
 		}
 		ptr = ptr->next;
 	}
+	LM_WARN("XXXXXX get_subscription did not find existing subscription for IMPI[%.*s]\n", impi_s->len, impi_s->s);
 	if(!leave_slot_locked)
+		LM_WARN("XXXXXX get_subscription inside if (!leave_slot_locked)\n");
 		unlock_subscription_slot(sl);
+		LM_WARN("XXXXXX get_subscription after unlock_subscription_slot(sl)\n");
 	return 1;
 }
 

@@ -964,7 +964,8 @@ int update_contacts(struct sip_msg *msg, udomain_t *_d, str *public_identity,
 								!= 0) {
 							LM_DBG("Contact does not exist <%.*s>\n",
 									chi->uri.len, chi->uri.s);
-							ul.unlock_udomain(_d, public_identity);
+							// activate this later after testing 18-1-2026
+							// ul.unlock_udomain(_d, public_identity);
 							LM_WARN("XXXXXX after ul.unlock_udomain\n");
 							goto error;
 						}
@@ -991,7 +992,7 @@ int update_contacts(struct sip_msg *msg, udomain_t *_d, str *public_identity,
 			if(ul.get_impurecord(_d, public_identity, &impu_rec) != 0) {
 				LM_ERR("No IMPU record fond for re-registration...aborting\n");
 				ul.unlock_udomain(_d, public_identity);
-				LM_WARN("XXXXXX after ul.unlock_udomain\n");
+				LM_WARN("XXXXXX after ul.unlock_udomain(_d, public_identity)\n");
 				goto error;
 			}
 
@@ -1001,7 +1002,7 @@ int update_contacts(struct sip_msg *msg, udomain_t *_d, str *public_identity,
 				LM_ERR("Failed trying to update contacts for "
 					   "re-registration\n");
 				ul.unlock_udomain(_d, public_identity);
-				LM_WARN("XXXXXX after ul.unlock_udomain\n");
+				LM_WARN("XXXXXX after ul.unlock_udomain(_d, public_identity)\n");
 				goto error;
 			}
 			//build the contact buffer for the exact registered contact for reply on explicit IMPU
@@ -1027,16 +1028,16 @@ int update_contacts(struct sip_msg *msg, udomain_t *_d, str *public_identity,
 				build_contact(impu_rec, contact_header,
 						skip_multiple_bindings_on_reg_resp == 1 ? msg : 0);
 				ul.unlock_udomain(_d, public_identity);
-				LM_WARN("XXXXXX after ul.unlock_udomain\n");
+				LM_WARN("XXXXXX after ul.unlock_udomain(_d, public_identity)\n");
 				break;
 			}
 
-			ul.lock_subscription(subscription);
+			ul.lock_subscription(subscription);			
 			subscription->ref_count++;
 			LM_DBG("ref count after add is now %d\n", subscription->ref_count);
 			ul.unlock_subscription(subscription);
 			ul.unlock_udomain(_d, public_identity);
-			LM_WARN("XXXXXX after ul.unlock_udomain\n");
+			LM_WARN("XXXXXX after ul.unlock_udomain(_d, public_identity)\n");
 
 			//now update the implicit set
 			for(i = 0; i < subscription->service_profiles_cnt; i++) {
@@ -1054,8 +1055,9 @@ int update_contacts(struct sip_msg *msg, udomain_t *_d, str *public_identity,
 								public_identity->len, public_identity->s);
 						continue;
 					}
+					// XXXXXXXXXXXXXXX
 					ul.lock_udomain(_d, &pi->public_identity);
-					LM_WARN("XXXXXX after ul.lock_udomain\n");
+					LM_WARN("XXXXXX after ul.lock_udomain(_d, &pi->public_identity)\n");
 
 					//update the implicit IMPU with the new data
 					if(ul.update_impurecord(_d, &pi->public_identity, 0,
@@ -1068,7 +1070,7 @@ int update_contacts(struct sip_msg *msg, udomain_t *_d, str *public_identity,
 							   "<%.*s>.... continuing\n",
 								pi->public_identity.len, pi->public_identity.s);
 						ul.unlock_udomain(_d, &pi->public_identity);
-						LM_WARN("XXXXXX after ul.unlock_udomain\n");
+						LM_WARN("XXXXXX after ul.unlock_udomain(_d, &pi->public_identity)\n");
 						continue;
 					}
 
@@ -1081,11 +1083,11 @@ int update_contacts(struct sip_msg *msg, udomain_t *_d, str *public_identity,
 							   "<%.*s>.......continuing\n",
 								pi->public_identity.len, pi->public_identity.s);
 						ul.unlock_udomain(_d, &pi->public_identity);
-						LM_WARN("XXXXXX after ul.unlock_udomain\n");
+						LM_WARN("XXXXXX after ul.unlock_udomain(_d, &pi->public_identity)\n");
 						continue;
 					}
 					ul.unlock_udomain(_d, &pi->public_identity);
-					LM_WARN("XXXXXX after ul.unlock_udomain\n");
+					LM_WARN("XXXXXX after ul.unlock_udomain(_d, &pi->public_identity)\n");
 				}
 			}
 			ul.lock_subscription(subscription);
@@ -1094,7 +1096,7 @@ int update_contacts(struct sip_msg *msg, udomain_t *_d, str *public_identity,
 			ul.unlock_subscription(subscription);
 
 			ul.lock_udomain(_d, public_identity);
-			LM_WARN("XXXXXX after ul.lock_udomain\n");
+			LM_WARN("XXXXXX after ul.lock_udomain(_d, public_identity)\n");
 			//finally we update the explicit IMPU record with the new data
 			if(ul.update_impurecord(_d, public_identity, 0, reg_state,
 					   -1 /*do not change send sar on delete */,
@@ -1114,8 +1116,9 @@ int update_contacts(struct sip_msg *msg, udomain_t *_d, str *public_identity,
 								!= 0) {
 							LM_DBG("Contact does not exist <%.*s>\n",
 									chi->uri.len, chi->uri.s);
-							ul.unlock_udomain(_d, public_identity);
-							LM_WARN("XXXXXX after ul.unlock_udomain\n");
+							// activate later after testing 18-1-2026
+							// ul.unlock_udomain(_d, public_identity);
+							LM_WARN("XXXXXX after ul.unlock_udomain(_d, public_identity)\n");
 							goto error;
 						}
 						event_reg(0, impu_rec, ucontact,
@@ -1127,7 +1130,7 @@ int update_contacts(struct sip_msg *msg, udomain_t *_d, str *public_identity,
 			}
 
 			ul.unlock_udomain(_d, public_identity);
-			LM_WARN("XXXXXX after ul.unlock_udomain\n");
+			LM_WARN("XXXXXX after ul.unlock_udomain(_d, public_identity)\n");
 			break;
 		case AVP_IMS_SAR_USER_DEREGISTRATION:
 			/*TODO: if it is not a star lets find all the contact records and remove them*/
@@ -1260,7 +1263,8 @@ int update_contacts(struct sip_msg *msg, udomain_t *_d, str *public_identity,
 										LM_DBG("Contact does not exist "
 											   "<%.*s>\n",
 												chi->uri.len, chi->uri.s);
-										ul.unlock_udomain(_d, public_identity);
+										// activate later after testing 18-1-2026
+										// ul.unlock_udomain(_d, &pi->public_identity);
 										LM_WARN("XXXXXX after ul.unlock_udomain\n");
 										goto error;
 									}
@@ -1285,6 +1289,8 @@ int update_contacts(struct sip_msg *msg, udomain_t *_d, str *public_identity,
 										LM_ERR("Error trying to determine if "
 											   "this is a sos contact <%.*s>\n",
 												chi->uri.len, chi->uri.s);
+										// to be corrected later &pi->public_identity
+										// ul.unlock_udomain(_d, &pi->public_identity);
 										ul.unlock_udomain(_d, public_identity);
 										LM_WARN("XXXXXX after ul.unlock_udomain\n");
 										goto error;
