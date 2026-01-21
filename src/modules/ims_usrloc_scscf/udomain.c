@@ -503,6 +503,7 @@ void mem_timer_udomain(udomain_t *_d, int istart, int istep)
  */
 void lock_udomain(udomain_t *_d, str *_aor)
 {
+	LM_WARN("XXXXXX lock_udomain\n");
 	unsigned int sl;
 	sl = core_hash(_aor, 0, _d->size);
 	lock_ulslot(_d, sl);
@@ -515,6 +516,7 @@ void lock_udomain(udomain_t *_d, str *_aor)
  */
 void unlock_udomain(udomain_t *_d, str *_aor)
 {
+	LM_WARN("XXXXXX unlock_udomain\n");
 	unsigned int sl;
 	sl = core_hash(_aor, 0, _d->size);
 	unlock_ulslot(_d, sl);
@@ -527,6 +529,7 @@ void unlock_udomain(udomain_t *_d, str *_aor)
  */
 void lock_ulslot(udomain_t *_d, int i)
 {
+	LM_WARN("XXXXXX lock_ulslot\n");
 #ifdef EXTRA_DEBUG
 	LM_DBG("LOCKING UDOMAIN SLOT [%d]\n", i);
 #endif
@@ -548,6 +551,7 @@ void lock_ulslot(udomain_t *_d, int i)
  */
 void unlock_ulslot(udomain_t *_d, int i)
 {
+	LM_WARN("XXXXXX unlock_ulslot\n");
 #ifdef EXTRA_DEBUG
 	LM_DBG("UN-LOCKING UDOMAIN SLOT [%d]\n", i);
 #endif
@@ -562,6 +566,7 @@ void unlock_ulslot(udomain_t *_d, int i)
 
 void lock_contact_slot(str *contact_uri)
 {
+	LM_WARN("XXXXXX lock_contact_slot\n");
 	unsigned int sl;
 	sl = core_hash(contact_uri, 0, contact_list->size);
 	lock_contact_slot_i(sl);
@@ -569,6 +574,7 @@ void lock_contact_slot(str *contact_uri)
 
 void unlock_contact_slot(str *contact_uri)
 {
+	LM_WARN("XXXXXX unlock_contact_slot\n");
 	unsigned int sl;
 	sl = core_hash(contact_uri, 0, contact_list->size);
 
@@ -577,6 +583,7 @@ void unlock_contact_slot(str *contact_uri)
 
 void lock_contact_slot_i(int i)
 {
+	LM_WARN("XXXXXX lock_contact_slot_i\n");
 #ifdef EXTRA_DEBUG
 	LM_DBG("LOCKING CONTACT SLOT [%d]\n", i);
 #endif
@@ -589,6 +596,7 @@ void lock_contact_slot_i(int i)
 
 void unlock_contact_slot_i(int i)
 {
+	LM_WARN("XXXXXX unlock_contact_slot_i\n");
 #ifdef EXTRA_DEBUG
 	LM_DBG("UN-LOCKING CONTACT SLOT [%d]\n", i);
 #endif
@@ -601,6 +609,7 @@ void unlock_contact_slot_i(int i)
 
 void lock_subscription(ims_subscription *s)
 {
+	LM_WARN("XXXXXX lock_subscription\n");
 #ifdef EXTRA_DEBUG
 	LM_DBG("LOCKING SUBSCRIPTION %p (Refcount: %d)\n", s->lock, s->ref_count);
 	LM_DBG("(SUBSCRIPTION PRIVATE IDENTITY [%.*s])\n", s->private_identity.len,
@@ -611,6 +620,7 @@ void lock_subscription(ims_subscription *s)
 
 void unlock_subscription(ims_subscription *s)
 {
+	LM_WARN("XXXXXX unlock_subscription\n");
 	if(s == 0)
 		return;
 #ifdef EXTRA_DEBUG
@@ -624,6 +634,7 @@ void unlock_subscription(ims_subscription *s)
 
 void lock_subscription_slot(int i)
 {
+	LM_WARN("XXXXXX lock_subscription_slot\n");
 #ifdef EXTRA_DEBUG
 	LM_DBG("LOCKING SUBSCRIPTION slot %d)\n", i);
 #endif
@@ -632,6 +643,7 @@ void lock_subscription_slot(int i)
 
 void unlock_subscription_slot(int i)
 {
+	LM_WARN("XXXXXX unlock_subscription_slot\n");
 #ifdef EXTRA_DEBUG
 	LM_DBG("UN-LOCKING SUBSCRIPTION slot %d\n", i);
 #endif
@@ -657,6 +669,7 @@ int insert_impurecord(struct udomain *_d, str *public_identity,
 		str *private_identity, int reg_state, int barring, ims_subscription **s,
 		str *ccf1, str *ccf2, str *ecf1, str *ecf2, struct impurecord **_r)
 {
+	LM_WARN("XXXXXX insert_impurecord\n");
 
 	if(s == 0 || (*s) == 0) {
 		LM_WARN("Can't insert an impurecord without it being associated to a "
@@ -703,6 +716,7 @@ error:
 int get_impurecord_unsafe(
 		udomain_t *_d, str *public_identity, struct impurecord **_r)
 {
+	LM_WARN("XXXXXX get_impurecord_unsafe\n");
 	unsigned int sl, i, aorhash;
 	impurecord_t *r;
 
@@ -734,6 +748,7 @@ int get_impurecord_unsafe(
  */
 int get_impurecord(udomain_t *_d, str *public_identity, struct impurecord **_r)
 {
+	LM_WARN("XXXXXX get_impurecord\n");
 	unsigned int ret;
 
 	ret = get_impurecord_unsafe(_d, public_identity, _r);
@@ -748,6 +763,7 @@ int get_impurecord(udomain_t *_d, str *public_identity, struct impurecord **_r)
  */
 void release_impurecord(udomain_t *_d, struct impurecord *_r)
 {
+	LM_WARN("XXXXXX release_impurecord\n");
 	unlock_udomain(_d, &_r->public_identity);
 }
 
@@ -760,6 +776,7 @@ void release_impurecord(udomain_t *_d, struct impurecord *_r)
  */
 int delete_impurecord(udomain_t *_d, str *_aor, struct impurecord *_r)
 {
+	LM_WARN("XXXXXX delete_impurecord\n");
 	LM_DBG("Deleting IMPURECORD [%.*s]\n", _r->public_identity.len,
 			_r->public_identity.s);
 
@@ -796,6 +813,7 @@ int delete_impurecord(udomain_t *_d, str *_aor, struct impurecord *_r)
 int get_impus_from_subscription_as_string(udomain_t *_d, impurecord_t *impu_rec,
 		int barring, str **impus, int *num_impus, int is_shm)
 {
+	LM_WARN("XXXXXX get_impus_from_subscription_as_string\n");
 	int i, j, count;
 	*num_impus = 0;
 	*impus = 0;
@@ -962,6 +980,7 @@ int get_subscription(str *impi_s, ims_subscription **s, int leave_slot_locked)
 
 void add_subscription_unsafe(ims_subscription *s)
 {
+	LM_WARN("XXXXXX add_subscription_unsafe\n");
 	int sl;
 	sl = core_hash(&s->private_identity, 0, subs_hash_size);
 	subs_slot_add(&ims_subscription_list->slot[sl], s);
@@ -970,6 +989,7 @@ void add_subscription_unsafe(ims_subscription *s)
 
 void add_subscription(ims_subscription *s)
 {
+	LM_WARN("XXXXXX add_subscription\n");
 	int sl;
 	sl = core_hash(&s->private_identity, 0, subs_hash_size);
 	lock_subscription_slot(sl);
@@ -1003,6 +1023,7 @@ int update_subscription(ims_subscription *s)
 
 void ref_contact_unsafe(ucontact_t *c)
 {
+	LM_WARN("XXXXXX ref_contact_unsafe\n");
 	LM_DBG("incrementing ref count on contact [%.*s], was %d\n", c->c.len,
 			c->c.s, c->ref_count);
 	c->ref_count++;
@@ -1014,6 +1035,7 @@ void ref_contact_unsafe(ucontact_t *c)
  */
 void unref_contact_unsafe(ucontact_t *c)
 {
+	LM_WARN("XXXXXX unref_contact_unsafe\n");
 	LM_DBG("decrementing ref count on contact [%.*s], was %d\n", c->c.len,
 			c->c.s, c->ref_count);
 	c->ref_count--;
