@@ -446,6 +446,7 @@ int build_expired_contact(contact_t *chi, contact_for_header_t **contact_header)
 int build_contact(impurecord_t *impurec, contact_for_header_t **contact_header,
 		struct sip_msg *msg)
 {
+	LM_WARN("XXXXXX build_contact");
 	char *p, *cp;
 	int fl, len, expires, expires_orig;
 	ucontact_t *c;
@@ -633,6 +634,7 @@ static inline unsigned int calc_associateduri_buf_len(ims_subscription *s)
  */
 int build_p_associated_uri(ims_subscription *s)
 {
+	LM_WARN("XXXXXX build_p_associated_uri");
 	char *p;
 	int i, j, cnt = 0;
 	ims_public_identity *id;

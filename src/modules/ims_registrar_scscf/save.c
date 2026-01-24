@@ -1118,7 +1118,7 @@ int update_contacts(struct sip_msg *msg, udomain_t *_d, str *public_identity,
 									chi->uri.len, chi->uri.s);
 							// activate later after testing 18-1-2026
 							// ul.unlock_udomain(_d, public_identity);
-							LM_WARN("XXXXXX after ul.unlock_udomain(_d, public_identity)\n");
+							// LM_WARN("XXXXXX after ul.unlock_udomain(_d, public_identity)\n");
 							goto error;
 						}
 						event_reg(0, impu_rec, ucontact,
@@ -1265,7 +1265,7 @@ int update_contacts(struct sip_msg *msg, udomain_t *_d, str *public_identity,
 												chi->uri.len, chi->uri.s);
 										// activate later after testing 18-1-2026
 										// ul.unlock_udomain(_d, &pi->public_identity);
-										LM_WARN("XXXXXX after ul.unlock_udomain\n");
+										// LM_WARN("XXXXXX after ul.unlock_udomain\n");
 										goto error;
 									}
 									notify_subscribers(tmp_impu_rec, ucontact,
@@ -1292,7 +1292,7 @@ int update_contacts(struct sip_msg *msg, udomain_t *_d, str *public_identity,
 										// to be corrected later &pi->public_identity
 										// ul.unlock_udomain(_d, &pi->public_identity);
 										ul.unlock_udomain(_d, public_identity);
-										LM_WARN("XXXXXX after ul.unlock_udomain\n");
+										LM_WARN("XXXXXX after ul.unlock_udomain(_d, public_identity) -> should be ul.unlock_udomain(_d, &pi->public_identity)\n");
 										goto error;
 									}
 									calc_contact_expires(chi, expires_hdr, sos);
