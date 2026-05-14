@@ -115,8 +115,8 @@ void prepare_to_cancel(
  *          supplying values in any other way is a bug*/
 int cancel_uacs(struct cell *t, struct cancel_info *cancel_data, int flags)
 {
-	LM_WARN("XXXXXX cancel_uacs\n");
-	LM_WARN("XXXXXX canceling T@%p [%u:%u], nr_of_outgoings=%d, cancel_bitmap=0x%X, reason=%d\n", t, t->hash_index,
+	WARN("XXXXXX cancel_uacs\n");
+	WARN("XXXXXX canceling T@%p [%u:%u], nr_of_outgoings=%d, cancel_bitmap=0x%X, reason=%d\n", t, t->hash_index,
 			t->label, t->nr_of_outgoings, cancel_data->cancel_bitmap, cancel_data->reason.cause);
 	int i;
 	int ret;
