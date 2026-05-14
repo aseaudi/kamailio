@@ -104,6 +104,8 @@ typedef void (*prepare_to_cancel_f)(
  */
 inline short static prepare_cancel_branch(struct cell *t, int b, int noreply)
 {
+	WARN("XXXXXX prepare_cancel_branch\n");
+	WARN("XXXXXX prepare_cancel_branch T@%p [%u:%u], branch=%d, noreply=%d\n", t, t->hash_index, t->label, b, noreply);
 	int last_received;
 	unsigned long old;
 
@@ -116,11 +118,14 @@ inline short static prepare_cancel_branch(struct cell *t, int b, int noreply)
 	/* if noreply=1 cancel even if no reply received (in this case
 	 * cancel_branch()  won't actually send the cancel but it will do the
 	 * cleanup) */
+	WARN("XXXXXX prepare_cancel_branch: checking last_received=%d\n", last_received);
 	if(last_received < 200 && (noreply || last_received >= 100)) {
+		WARN("XXXXXX prepare_cancel_branch: marking branch for cancel\n");
 		old = atomic_cmpxchg_long(
 				(void *)&t->uac[b].local_cancel.buffer, 0, (long)(BUSY_BUFFER));
 		return old == 0;
 	}
+	WARN("XXXXXX prepare_cancel_branch: branch not marked for cancel\n");
 	return 0;
 }
 
