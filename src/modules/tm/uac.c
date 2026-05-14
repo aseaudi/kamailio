@@ -471,8 +471,8 @@ static inline int t_uac_prepare(
 	WARN("XXXXXX uac_r->headers: [%.*s]\n", uac_r->headers->len, uac_r->headers->s);
 	WARN("XXXXXX uac_r->body: [%.*s]\n", uac_r->body->len, uac_r->body->s);
 	// WARN("XXXXXX uac_r->dialog: %p\n", uac_r->dialog);
-	WARN("XXXXXX uac_r->cb_flags: 0x%X\n", uac_r->cb_flags);
-	WARN("XXXXXX uac_r->callid: [%.*s]\n", uac_r->callid->len, uac_r->callid->s);
+	// WARN("XXXXXX uac_r->cb_flags: 0x%X\n", uac_r->cb_flags);
+	// WARN("XXXXXX uac_r->callid: [%.*s]\n", uac_r->callid->len, uac_r->callid->s);
 	WARN("XXXXXX uac_r->fromtag: [%.*s]\n", uac_r->fromtag->len, uac_r->fromtag->s);
 	WARN("XXXXXX uac_r->cseqno: %u\n", uac_r->cseqno);
 	struct dest_info dst;
@@ -763,7 +763,7 @@ static inline int send_prepared_request_impl(
 {
 	WARN("XXXXXX send_prepared_request_impl\n");
 	WARN("XXXXXX branch: %d\n", branch);
-	
+
 	struct cell *t;
 	struct sip_msg *p_msg;
 	struct ua_client *uac;
