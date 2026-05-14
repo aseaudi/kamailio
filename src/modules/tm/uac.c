@@ -669,7 +669,7 @@ static inline int t_uac_prepare(
 		}
 	}
 	new_cell->nr_of_outgoings++;
-	WARN("XXXXXX new_cell->nr_of_outgoings: %u\n", new_cell->nr_of_outgoings);
+	WARN("XXXXXX new_cell->nr_of_outgoings: %d\n", new_cell->nr_of_outgoings);
 
 	/* Register the callbacks after everything is successful and nothing can fail.
 	Otherwise the callback parameter would be freed twise, once from TMCB_DESTROY,

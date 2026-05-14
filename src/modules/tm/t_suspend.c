@@ -145,7 +145,7 @@ int t_suspend(
 
 	*hash_index = t->hash_index;
 	*label = t->label;
-	WARN("XXXXXX t_suspend: transaction suspended with hash_index=%u, label=%u\n", *hash_index, *label);
+	WARN("XXXXXX t_suspend: transaction suspended with hash_index=%d, label=%d\n", t->hash_index, t->label);
 	/* reset the continue flag to be able to suspend in a failure route */
 	t->flags &= ~T_ASYNC_CONTINUE;
 
