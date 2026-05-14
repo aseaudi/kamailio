@@ -89,6 +89,9 @@ void cancel_reason_text(struct cancel_info *cancel_data)
 void prepare_to_cancel(
 		struct cell *t, branch_bm_t *cancel_bm, branch_bm_t skip_branches)
 {
+	WARN("XXXXXX prepare_to_cancel\n");
+	WARN("XXXXXX prepare_to_cancel T@%p [%u:%u], nr_of_outgoings=%d, skip_branches=0x%X\n", t, t->hash_index, t->label, t->nr_of_outgoings, skip_branches);
+	
 	int i;
 	int branches_no;
 	branch_bm_t mask;
