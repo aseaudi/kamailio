@@ -436,7 +436,7 @@ void rpc_cancel(rpc_t *rpc, void *c)
 	prepare_to_cancel(trans, &cancel_data.cancel_bitmap, 0);
 	/* tell tm to cancel the call */
 	DBG("Now calling cancel_uacs\n");
-	DBG("nr_of_outgoings=%d, cancel bitmap: 0x%X\n", trans->nr_of_outgoings, cancel_data.cancel_bitmap);
+	DBG("XXXXXX nr_of_outgoings=%d, cancel bitmap: 0x%X\n", trans->nr_of_outgoings, cancel_data.cancel_bitmap);
 	i = cancel_uacs(trans, &cancel_data, F_CANCEL_LOCAL); /* don't fake 487s,
 										 just wait for timeout */
 
