@@ -777,6 +777,7 @@ error00:
  */
 int add_blind_uac(/*struct cell *t*/)
 {
+	WARN("XXXXXX add_blind_uac\n");
 	unsigned short branch;
 	struct cell *t;
 

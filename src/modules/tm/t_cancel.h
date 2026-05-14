@@ -106,6 +106,7 @@ inline short static prepare_cancel_branch(struct cell *t, int b, int noreply)
 {
 	WARN("XXXXXX prepare_cancel_branch\n");
 	WARN("XXXXXX prepare_cancel_branch T@%p [%u:%u], branch=%d, noreply=%d\n", t, t->hash_index, t->label, b, noreply);
+	WARN("XXXXXX t->uac[%d].flags=0x%X, last_received=%d\n", b, t->uac[b].flags, t->uac[b].last_received);
 	int last_received;
 	unsigned long old;
 
