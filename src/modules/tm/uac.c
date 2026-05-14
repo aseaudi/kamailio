@@ -466,6 +466,15 @@ clean:
 static inline int t_uac_prepare(
 		uac_req_t *uac_r, struct retr_buf **dst_req, struct cell **dst_cell)
 {
+	WARN("XXXXXX t_uac_prepare\n");
+	WARN("XXXXXX uac_r->method: [%.*s]\n", uac_r->method->len, uac_r->method->s);
+	WARN("XXXXXX uac_r->headers: [%.*s]\n", uac_r->headers->len, uac_r->headers->s);
+	WARN("XXXXXX uac_r->body: [%.*s]\n", uac_r->body->len, uac_r->body->s);
+	// WARN("XXXXXX uac_r->dialog: %p\n", uac_r->dialog);
+	WARN("XXXXXX uac_r->cb_flags: 0x%X\n", uac_r->cb_flags);
+	WARN("XXXXXX uac_r->callid: [%.*s]\n", uac_r->callid->len, uac_r->callid->s);
+	WARN("XXXXXX uac_r->fromtag: [%.*s]\n", uac_r->fromtag->len, uac_r->fromtag->s);
+	WARN("XXXXXX uac_r->cseqno: %u\n", uac_r->cseqno);
 	struct dest_info dst;
 	struct cell *new_cell;
 	struct retr_buf *request;
@@ -660,6 +669,7 @@ static inline int t_uac_prepare(
 		}
 	}
 	new_cell->nr_of_outgoings++;
+	WARN("XXXXXX new_cell->nr_of_outgoings: %u\n", new_cell->nr_of_outgoings);
 
 	/* Register the callbacks after everything is successful and nothing can fail.
 	Otherwise the callback parameter would be freed twise, once from TMCB_DESTROY,
@@ -751,6 +761,9 @@ err:
 static inline int send_prepared_request_impl(
 		struct retr_buf *request, int retransmit, int branch)
 {
+	WARN("XXXXXX send_prepared_request_impl\n");
+	WARN("XXXXXX branch: %d\n", branch);
+	
 	struct cell *t;
 	struct sip_msg *p_msg;
 	struct ua_client *uac;

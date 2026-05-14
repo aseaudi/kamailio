@@ -57,6 +57,7 @@
 int t_suspend(
 		struct sip_msg *msg, unsigned int *hash_index, unsigned int *label)
 {
+	WARN("XXXXXX t_suspend\n");
 	struct cell *t;
 	int branch;
 	int sip_msg_len;
@@ -144,7 +145,7 @@ int t_suspend(
 
 	*hash_index = t->hash_index;
 	*label = t->label;
-
+	WARN("XXXXXX t_suspend: transaction suspended with hash_index=%u, label=%u\n", *hash_index, *label);
 	/* reset the continue flag to be able to suspend in a failure route */
 	t->flags &= ~T_ASYNC_CONTINUE;
 

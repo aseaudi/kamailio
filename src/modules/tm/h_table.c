@@ -307,6 +307,7 @@ static inline void init_synonym_id(struct sip_msg *p_msg, char *hashval)
 
 static void inline init_branches(struct cell *t)
 {
+	WARN("XXXXXX init_branches\n");
 	unsigned int i;
 	struct ua_client *uac;
 
@@ -325,6 +326,7 @@ static void inline init_branches(struct cell *t)
 
 struct cell *build_cell(struct sip_msg *p_msg)
 {
+	WARN("XXXXXX build_cell\n");
 	struct cell *new_cell;
 	int sip_msg_len;
 	avp_list_t *old;
