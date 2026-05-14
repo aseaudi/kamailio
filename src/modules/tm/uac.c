@@ -473,8 +473,8 @@ static inline int t_uac_prepare(
 	// WARN("XXXXXX uac_r->dialog: %p\n", uac_r->dialog);
 	// WARN("XXXXXX uac_r->cb_flags: 0x%X\n", uac_r->cb_flags);
 	// WARN("XXXXXX uac_r->callid: [%.*s]\n", uac_r->callid->len, uac_r->callid->s);
-	WARN("XXXXXX uac_r->fromtag: [%.*s]\n", uac_r->fromtag->len, uac_r->fromtag->s);
-	WARN("XXXXXX uac_r->cseqno: %u\n", uac_r->cseqno);
+	// WARN("XXXXXX uac_r->fromtag: [%.*s]\n", uac_r->fromtag->len, uac_r->fromtag->s);
+	// WARN("XXXXXX uac_r->cseqno: %u\n", uac_r->cseqno);
 	struct dest_info dst;
 	struct cell *new_cell;
 	struct retr_buf *request;
